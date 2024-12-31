@@ -29,3 +29,123 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+ /* Full-page layout with flexbox */
+ body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  overflow: hidden;
+  background-color:#d0d6df ;
+
+}
+
+/* Header styles */
+header {
+  flex: 0 0 auto;
+  position: sticky;
+}
+header nav {
+  padding: 0.5rem 1rem; /* Adjust top-bottom and left-right padding */
+  height: 50px; /* Set a fixed height if needed */
+  line-height: 50px; /* Vertically center text and icons */
+  border: none;
+}
+/* Main layout with sidebar and content */
+.main-container {
+  display: flex;
+  flex: 1 1 auto; /* Takes up remaining vertical space */
+  overflow: hidden;
+  padding: 5px;
+  
+}
+
+/* Sidebar styles */
+.sidebar {
+  width: 250px;
+  background-color: #111827;
+  color: white;
+  flex: 0 0 250px; /* Fixed width */
+  display: flex;
+  flex-direction: column;
+  padding-top: 20px;
+  border-radius: 10px;
+  padding:10px;
+}
+
+.sidebar a {
+  color: #9ca3af;
+  padding: 10px 20px;
+  text-decoration: none;
+}
+
+.sidebar a:hover {
+  background-color: #374151;
+  color: white;
+}
+
+/* Main content styles */
+.content {
+  flex: 1 1 auto; /* Takes up remaining space */
+  padding: 20px;
+  background-color: #f8f9fa;
+  overflow-y: auto;
+  padding: 10px;
+  border-radius: 10px;
+  margin-left:5px;
+}
+
+/* Footer styles */
+footer {
+  flex: 0 0 auto;
+}
+
+.custom-navbar {
+  background-color: #d0d6df; /* Replace with your preferred color */
+   /* Ensure text is visible against the background */
+}
+
+/* Adjust search bar */
+form.d-flex {
+  max-width: 600px; /* Set a maximum width for the search bar */
+  width: 100%; /* Make it responsive */
+}
+
+/* Align logo */
+.navbar .navbar-brand img {
+  max-height: 40px;
+}
+
+/* Adjust buttons for notifications and profile icons */
+.navbar .btn i {
+  font-size: 1.0rem; /* Set appropriate icon size */
+  vertical-align: middle; /* Center icons vertically */
+}
+
+/* Center search bar container */
+.navbar .d-flex.justify-content-center {
+  flex-grow: 1; /* Take up remaining space */
+  justify-content: center; /* Center-align the search bar */
+}
+
+/* Make the search bar transparent */
+.search-bar {
+  background-color: transparent; /* Remove background color */
+  border: 1px solid rgba(7, 0, 0, 0.5); /* Add a subtle border */
+  color: rgb(9, 0, 0); /* Ensure text color contrasts with the background */
+  border-radius: 30px;
+  
+}
+/* Style the placeholder text */
+.search-bar::placeholder {
+  color: #485465; /* Light color for placeholder text */
+  font-style: italic; /* Optional: Italicize placeholder text */
+}
+
+/* Add focus styles for accessibility */
+.search-bar:focus {
+  background-color: transparent;
+  outline: none; /* Remove the default focus outline */
+  border: 1px solid rgba(12, 0, 0, 0.8); /* Brighten the border on focus */
+}

@@ -17,7 +17,6 @@
 /Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/scopedcss/Views/Shared/_Layout.cshtml.rz.scp.css
 /Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/scopedcss/bundle/inventory.styles.css
 /Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/scopedcss/projectbundle/inventory.bundle.scp.css
-/Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/compressed/1u9bfvjqaq-b9sayid5wm.gz
 /Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/compressed/y5pvyzviyl-61n19gt1b8.gz
 /Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/compressed/3bqkzn4ea5-xtxxf3hu2r.gz
 /Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/compressed/96afsloxq7-bqjiyaj88i.gz
@@ -95,3 +94,17 @@
 /Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/inventory.pdb
 /Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/inventory.genruntimeconfig.cache
 /Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/ref/inventory.dll
+/Users/breezy/Documents/breezy/third_year/ims/inventory/bin/Debug/net9.0/Auth0.AspNetCore.Authentication.dll
+/Users/breezy/Documents/breezy/third_year/ims/inventory/bin/Debug/net9.0/Microsoft.AspNetCore.Authentication.OpenIdConnect.dll
+/Users/breezy/Documents/breezy/third_year/ims/inventory/bin/Debug/net9.0/Microsoft.IdentityModel.Abstractions.dll
+/Users/breezy/Documents/breezy/third_year/ims/inventory/bin/Debug/net9.0/Microsoft.IdentityModel.JsonWebTokens.dll
+/Users/breezy/Documents/breezy/third_year/ims/inventory/bin/Debug/net9.0/Microsoft.IdentityModel.Logging.dll
+/Users/breezy/Documents/breezy/third_year/ims/inventory/bin/Debug/net9.0/Microsoft.IdentityModel.Protocols.dll
+/Users/breezy/Documents/breezy/third_year/ims/inventory/bin/Debug/net9.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+/Users/breezy/Documents/breezy/third_year/ims/inventory/bin/Debug/net9.0/Microsoft.IdentityModel.Tokens.dll
+/Users/breezy/Documents/breezy/third_year/ims/inventory/bin/Debug/net9.0/System.IdentityModel.Tokens.Jwt.dll
+/Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/inventory.csproj.AssemblyReference.cache
+/Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/inventory.sourcelink.json
+/Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/inventory.csproj.Up2Date
+/Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/compressed/1u9bfvjqaq-dbup7tcpa6.gz
+/Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/compressed/0ls6lv7bmv-1ck97c2vr9.gz
