@@ -21,9 +21,6 @@ jobs:
         with:
           dotnet-version: '9.x'
 
-      - name: clean 
-        run: dotnet clean
-
       - name: Install dependencies
         run: dotnet restore
 
