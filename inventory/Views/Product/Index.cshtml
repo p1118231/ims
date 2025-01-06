@@ -1,0 +1,41 @@
+@model IEnumerable<Product>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="page-title">Inventory Management</h1>
+
+<div class="inventory-list">
+    @foreach (var product in Model)
+    {
+        <div class="inventory-item">
+           
+            <div class="inventory-details">
+                <h3 class="inventory-name">@product.Name</h3>
+                <p class="inventory-description">@product.Description</p>
+                <div class="inventory-info">
+                    <span class="inventory-price">Price: $@product.Price</span>
+                    <span class="inventory-stock">
+                        Stock:
+                        @if (product.Quantity > 0)
+                        {
+                            <strong>@product.Quantity</strong>
+                        }
+                        else
+                        {
+                            <strong class="low-stock">Out of Stock</strong>
+                        }
+                    </span>
+                </div>
+                <div class="inventory-actions">
+                    <a href="@Url.Action("Edit", new { id = product.Id })" class="btn btn-primary">Edit</a>
+                    <a href="@Url.Action("Details", new { id = product.Id })" class="btn btn-secondary">View Details</a>
+                    <form asp-action="Delete" asp-route-id="@product.Id" method="post" class="delete-form">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>

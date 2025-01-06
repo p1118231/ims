@@ -9,6 +9,12 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using inventory.Support;
+using Microsoft.EntityFrameworkCore;
+using inventory.Data;
+using CsvHelper;
+using System.Globalization;
+using inventory.Models;
+using inventory.Services.ProductRepo;
 
 
 
@@ -19,6 +25,33 @@ builder.Services.AddControllersWithViews();
 
 // Configure the HTTP request pipeline.
 builder.Services.ConfigureSameSiteNoneCookies();
+
+builder.Services.AddScoped<IProductService, ProductService>();
+
+//add database context
+builder.Services.AddDbContext<ProductContext>(options =>
+{
+    if (builder.Environment.IsDevelopment())
+    {
+        var folder = Environment.SpecialFolder.LocalApplicationData;
+        var path = Environment.GetFolderPath(folder);
+        var dbPath = System.IO.Path.Join(path, "product.db");
+        options.UseSqlite($"Data Source={dbPath}");
+        options.EnableDetailedErrors();
+        options.EnableSensitiveDataLogging();
+    }
+    else
+    {
+         var cs = builder.Configuration.GetConnectionString("ProductContext");
+        options.UseSqlServer(cs, sqlServerOptionsAction: sqlOptions =>
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(6),
+                errorNumbersToAdd: null
+            )
+        );
+    }
+});
 
 // Add session services
     builder.Services.AddDistributedMemoryCache();
@@ -70,6 +103,30 @@ builder.Services.ConfigureSameSiteNoneCookies();
 
 var app = builder.Build();
 
+if(builder.Environment.IsDevelopment()){
+
+// Use this code to insert products into the database once
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ProductContext>();
+
+    // Check if the database is empty, then insert products from CSV
+    if (!dbContext.Product.Any())
+    {
+        
+        var csvFilePath = "wwwroot/csvFiles/product_data.csv";  // Adjust this path if necessary
+        using (var reader = new StreamReader(csvFilePath))
+        using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+        {
+            var products = csv.GetRecords<Product>().ToList();
+
+            // Insert products into the database
+            dbContext.Product.AddRange(products);
+            dbContext.SaveChanges();
+        }
+    }
+}
+}
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

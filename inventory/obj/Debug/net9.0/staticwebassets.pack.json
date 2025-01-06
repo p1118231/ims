@@ -5,12 +5,20 @@
       "PackagePath": "staticwebassets/inventory.dvi485h4ia.bundle.scp.css"
     },
     {
+      "Id": "/Users/breezy/Documents/breezy/third_year/ims/inventory/wwwroot/css/product.css",
+      "PackagePath": "staticwebassets/css/product.css"
+    },
+    {
       "Id": "/Users/breezy/Documents/breezy/third_year/ims/inventory/wwwroot/css/signin.css",
       "PackagePath": "staticwebassets/css/signin.css"
     },
     {
       "Id": "/Users/breezy/Documents/breezy/third_year/ims/inventory/wwwroot/css/site.css",
       "PackagePath": "staticwebassets/css/site.css"
+    },
+    {
+      "Id": "/Users/breezy/Documents/breezy/third_year/ims/inventory/wwwroot/csvFiles/product_data.csv",
+      "PackagePath": "staticwebassets/csvFiles/product_data.csv"
     },
     {
       "Id": "/Users/breezy/Documents/breezy/third_year/ims/inventory/wwwroot/favicon.ico",
