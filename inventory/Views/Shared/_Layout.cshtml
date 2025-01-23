@@ -14,6 +14,11 @@
     
 </head>
 <body>
+    @* Conditionally Render Navbar based on Controller and Action *@
+    @if (!(Context.Request.RouteValues["controller"]?.ToString() == "Product" && 
+           (Context.Request.RouteValues["action"]?.ToString() == "Delete" )))
+           {
+           
     <header>
     <nav class="navbar navbar-expand-sm navbar-light custom-navbar">
         <div class="container-fluid d-flex align-items-center">
@@ -22,13 +27,6 @@
                 <img src="~/images/ims_transparent-.png" alt="IMS" style="height: 40px;" />
             </a>
 
-            <!-- Search Bar -->
-            <div class="d-flex flex-grow-1 justify-content-center">
-                <form class="d-flex" method="get" asp-action="Search" asp-controller="Home" style="max-width: 600px; width: 100%;">
-                    <input class="form-control me-2 search-bar" type="search" placeholder="Search products..." aria-label="Search" name="query">
-                    <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
-                </form>
-            </div>
 
             <!-- Notifications and Profile -->
             <ul class="navbar-nav ms-auto d-flex align-items-center">
@@ -53,6 +51,7 @@
         </div>
     </nav>
 </header>
+        }
      <!-- Sidebar -->
     
     <div class="main-container">
@@ -61,7 +60,9 @@
         <a asp-area="" asp-controller="Product" asp-action="Index"><i class="bi bi-box"></i> Products</a>
         <a asp-area="" asp-controller="Orders" asp-action="Index"><i class="bi bi-cart"></i> Orders</a>
         <a asp-area="" asp-controller="Analytics" asp-action="Index"><i class="bi bi-graph-up"></i> Analytics</a>
+        <a asp-area="" asp-controller="Supplier" asp-action="Index"><i class="bi bi-person-circle"></i> Suppliers</a>
         <a asp-area="" asp-controller="Settings" asp-action="Index"><i class="bi bi-gear"></i> Settings</a>
+        <a asp-area="" asp-controller="Settings" asp-action="Index"><i class="bi bi-gear"></i> AI Recommendations</a>
       </div>
       <div class="content">
         <main role="main" class="pb-3">

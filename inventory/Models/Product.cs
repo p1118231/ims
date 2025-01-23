@@ -5,13 +5,12 @@ namespace inventory.Models;
 
 public class Product{
 
-    public int Id{get; set;}
+    public int ProductId{get; set;}
 
     public String? Name{get; set;} 
 
     public int Quantity {get; set;}
 
-    public String? Category {get; set;}
 
     public String? ImageUrl {get; set;}
 
@@ -21,7 +20,13 @@ public class Product{
 
     public decimal Price {get;set;}
 
-    public String? Supplier{get; set;}
+    // Foreign Keys
+    public int SupplierId { get; set; }
+    public int CategoryId { get; set; }
+
+    // Navigation Properties
+    public  Supplier? Supplier { get; set; }
+    public  Category? Category { get; set; }
 
 
 }

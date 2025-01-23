@@ -1,0 +1,64 @@
+@model Product
+
+@{
+    ViewData["Title"] = "Product Details";
+}
+
+<div class="product-details-container">
+
+    <a href="@Url.Action("Index", "Product")" class="btn btn-secondary">Back to List</a>
+
+    <div class="details-stock-container">
+    <!-- Section 1: Product Details and Image -->
+
+    <div class="details-description-container">
+    <div class="details-image-section">
+        <div class="product-image">
+            <img src="@Model.ImageUrl" alt="@Model.Name" />
+        </div>
+        <div class="product-details">
+            <h1>Name: @Model.Name</h1>
+            <h2>Id: @Model.ProductId</h2>
+            <p>Category: @Model.Category?.Name</p>
+            <h4>Price: $@Model.Price</h4>
+        </div>
+    </div>
+
+    <!-- Section 2: details -->
+    <div class="description-section">
+        <h3>Description</h3>
+        <p>@Model.Description</p>
+    </div>
+
+    <!-- Section 3: Stock Status and Supplier -->
+    <div class="stock-supplier-section">
+        <h3>Stock and Supplier</h3>
+        <p><strong>Stock Status:</strong> 
+            @if (Model.Quantity > 0)
+            {
+                <span>In Stock (@Model.Quantity)</span>
+            }
+            else
+            {
+                <span class="out-of-stock">Out of Stock</span>
+            }
+        </p>
+        <p><strong>Supplier:</strong> @Model.Supplier?.Name</p>
+    </div>
+    </div>
+  
+
+    <!-- Section 3: Actions -->
+    <div class="actions-section">
+        <h3>Actions</h3>
+        <div class="action-buttons">
+            <a asp-area="" asp-asp-controller="Product" asp-action="Edit">Change Description</a>
+            <a asp-area="" asp-asp-controller="Product" asp-action="Edit">Change Supplier</a>
+            <a asp-area="" asp-asp-controller="Product" asp-action="Edit">Change Price</a>
+            <a asp-area="" asp-asp-controller="Product" asp-action="Edit">Change Image</a>
+            <a asp-area="" asp-asp-controller="Product" asp-action="Edit">Change Description</a>
+            <a asp-area="" asp-asp-controller="Product" asp-action="Edit">Remove Product</a>
+            <a asp-area="" asp-asp-controller="Product" asp-action="Edit">View Sales</a>
+        </div>
+    </div>
+</div>
