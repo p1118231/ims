@@ -30,17 +30,21 @@ namespace inventory.Services.ProductRepo
 
         public async Task<Product?> GetProductByIdAsync(int? id)
         {
-            return await _context.Product.FindAsync(id);
+            return await _context.Product
+            .Include(p => p.Category)  // Include related Category
+            .Include(p => p.Supplier)  // Include related Supplier
+            .FirstOrDefaultAsync(p => p.ProductId == id); // Filter by ID
+
         }
 
         public async Task<IEnumerable<Product>> GetProducts()
         {
-            return (IEnumerable<Product>)await _context.Product.ToListAsync();
+            return (IEnumerable<Product>)await _context.Product.Include(p=> p.Category).ToListAsync();
         }
 
         public bool ProductExists(int id)
         {
-            return _context.Product.Any(e => e.Id == id);
+            return _context.Product.Any(e => e.ProductId == id);
         }
 
         public async Task<bool> RemoveProduct(Product product)

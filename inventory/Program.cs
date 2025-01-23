@@ -15,6 +15,7 @@ using CsvHelper;
 using System.Globalization;
 using inventory.Models;
 using inventory.Services.ProductRepo;
+using Microsoft.AspNetCore.DataProtection;
 
 
 
@@ -27,6 +28,14 @@ builder.Services.AddControllersWithViews();
 builder.Services.ConfigureSameSiteNoneCookies();
 
 builder.Services.AddScoped<IProductService, ProductService>();
+
+builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
+
+//builder.Services.AddDataProtection()
+  //  .PersistKeysToFileSystem(new DirectoryInfo(@"C:\keys")) // Use a shared directory for load-balanced systems
+   // .SetApplicationName("MyApp"); // Optional: To ensure isolation between apps
+
 
 //add database context
 builder.Services.AddDbContext<ProductContext>(options =>
@@ -114,30 +123,63 @@ using (var scope = app.Services.CreateScope())
     if (!dbContext.Product.Any())
     {
         
-        var csvFilePath = "wwwroot/csvFiles/product_data.csv";  // Adjust this path if necessary
+        var csvFilePath = "wwwroot/csvFiles/products_data.csv";  // Adjust this path if necessary
         using (var reader = new StreamReader(csvFilePath))
         using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
         {
             var products = csv.GetRecords<Product>().ToList();
 
             // Insert products into the database
-            dbContext.Product.AddRange(products);
-            dbContext.SaveChanges();
+            
+           
         }
+
+        var categoryCsvFilePath = "wwwroot/csvFiles/category_data.csv";  // Adjust this path if necessary
+        using (var reader = new StreamReader(categoryCsvFilePath))
+        using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+        {
+            var categories = csv.GetRecords<Category>().ToList();
+
+            // Insert products into the database
+            dbContext.Categories.AddRange(categories);
+            
+        }
+
+        var supplierCsvFilePath = "wwwroot/csvFiles/supplier_data.csv";  // Adjust this path if necessary
+        using (var reader = new StreamReader(supplierCsvFilePath))
+        using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+        {
+            var suppliers = csv.GetRecords<Supplier>().ToList();
+
+            // Insert products into the database
+            dbContext.Suppliers.AddRange(suppliers);
+            
+        }
+
+        dbContext.SaveChanges();
     }
 }
 }
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+
+
+if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
+    app.UseBrowserLink(); // Add this line
+   
+}
+else{
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
+
 app.UseRouting();
+
 app.UseSession();
+
 app.UseAuthentication();
 
 app.UseAuthorization();
