@@ -1,0 +1,105 @@
+@model Product
+
+@{
+    ViewData["Title"] = $"Edit {ViewBag.FieldToEdit}";
+}
+
+<h1>Edit @ViewBag.FieldToEdit for @Model.Name</h1>
+
+<form asp-action="EditField" method="post" onsubmit="return confirmAndSave();">
+    <input type="hidden" name="id" value="@Model.ProductId" />
+    <input type="hidden" name="field" value="@ViewBag.FieldToEdit" />
+    <input type="hidden" id="newValue" name="newValue" />
+
+    @if (ViewBag.FieldToEdit.ToLower() == "supplier")
+    {
+        <div class="form-group">
+            <label for="supplier-dropdown">Select New Supplier:</label>
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="supplier-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    Select Supplier
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="supplier-dropdown">
+                    @foreach (var supplier in ViewBag.Suppliers as List<Supplier>)
+                    {
+                        <li>
+                            <a class="dropdown-item" href="#" onclick="selectValue('@supplier.SupplierId', '@supplier.Name')">
+                                @supplier.Name
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+    else if (ViewBag.FieldToEdit.ToLower() == "category")
+    {
+        <div class="form-group">
+            <label for="category-dropdown">Select New Category:</label>
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="category-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    Select Category
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="category-dropdown">
+                    @foreach (var category in ViewBag.Categories as List<Category>)
+                    {
+                        <li>
+                            <a class="dropdown-item" href="#" onclick="selectValue('@category.CategoryId', '@category.Name')">
+                                @category.Name
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="form-group">
+            <label for="newValue">New @ViewBag.FieldToEdit:</label>
+            <input type="text" name="newValue" id="newValue" class="form-control" required/>
+        </div>
+    }
+
+    <button type="submit" class="btn btn-success">Save</button>
+    <a asp-action="Details" asp-route-id="@Model.ProductId" class="btn btn-secondary">Cancel</a>
+
+</form>
+
+<!-- Toast Notification -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                Changes have been saved successfully!
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Function to update hidden input and dropdown button
+    function selectValue(id, name) {
+        document.getElementById("newValue").value = id; // Update hidden input
+        const dropdownButton = document.querySelector(".dropdown-toggle");
+        dropdownButton.textContent = name; // Update dropdown text
+    }
+
+    // Show Toast Notification
+    function showToast() {
+        const toastElement = document.getElementById('successToast');
+        const toast = new bootstrap.Toast(toastElement);
+        toast.show();
+    }
+
+    // Function to confirm and save
+    function confirmAndSave() {
+        const isConfirmed = confirm("Are you sure you want to save the changes?");
+        if (isConfirmed) {
+            showToast(); // Show toast notification if confirmed
+            return true; // Allow form submission
+        }
+        return false; // Prevent form submission if not confirmed
+    }
+</script>

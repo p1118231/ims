@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using inventory.Models;
 using Microsoft.AspNetCore.Authorization;
 using inventory.Services.ProductRepo;
+using System.Threading.Tasks;
+using inventory.Services.CategoryRepo;
+using inventory.Services.SupplierRepo;
 
 
 namespace inventory.Controllers;
@@ -13,14 +16,19 @@ public class ProductController : Controller
 
     private readonly IProductService _productService;
 
-    public ProductController(ILogger<ProductController> logger, IProductService productService)
+    private readonly ICategoryService _categoryService;
+
+    private readonly ISupplierService _supplierService;
+
+    public ProductController(ILogger<ProductController> logger, IProductService productService, ICategoryService categoryService, ISupplierService supplierService)
     {
         _logger = logger;
         _productService = productService;
-        
+        _categoryService = categoryService;
+        _supplierService = supplierService;
     }
- 
-    //get the products from the website 
+    
+    
     public async Task<IActionResult> Index(string? query)
     {
         IEnumerable<Product> products = null!;
@@ -103,4 +111,108 @@ public class ProductController : Controller
 
             
         }
+
+//add edit field for the product entities
+            public async Task<IActionResult> EditField(int id, string field)
+            {
+                var product = await _productService.GetProductByIdAsync(id);
+
+                if (product == null)
+                {
+                    return NotFound();
+                }
+
+                // Fetch dropdown data for suppliers and categories
+                if (field.ToLower() == "supplier" || field.ToLower() == "category")
+                {
+                    ViewBag.Categories =await _categoryService.GetCategories();
+                    ViewBag.Suppliers = await _supplierService.GetSuppliers();
+                }
+
+                ViewBag.FieldToEdit = field;
+                return View(product);
+            }
+
+            [HttpPost]
+            public async Task<IActionResult> EditField(int id, string field, string newValue)
+            {
+                var product = await _productService.GetProductByIdAsync(id);
+
+                if (product == null)
+                {
+                    return NotFound();
+                }
+
+
+               /* if (string.IsNullOrEmpty(newValue))
+                {
+                    ModelState.AddModelError("", "The new value cannot be empty.");
+                    ViewBag.FieldToEdit = field; // Ensure FieldToEdit is set
+                    ViewBag.Categories =await _categoryService.GetCategories();
+                    ViewBag.Suppliers = await _supplierService.GetSuppliers();
+                    return View(product);
+                }*/
+
+                switch (field.ToLower())
+                {
+                    case "description":
+                        product.Description = newValue;
+                        break;
+                    case "supplier":
+                        product.SupplierId = int.Parse(newValue); 
+                        break;
+                    case "category":
+                        product.CategoryId = int.Parse(newValue); 
+                        break;
+                    case "price":
+                        product.Price = decimal.Parse(newValue);
+                        break;
+                    case "image":
+                        product.ImageUrl = newValue;
+                        break;
+                    default:
+                        return BadRequest("Invalid field");
+                }
+
+                await _productService.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Changes have been saved successfully!";
+
+                return RedirectToAction("Details", new { id });
+            }
+
+    
+        // GET: Product/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var product = await _productService.GetProductByIdAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return View(product);
+        }
+
+        // POST: Product/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var product =  await _productService.GetProductByIdAsync(id);
+            if (product != null)
+            {
+                await _productService.RemoveProduct(product);
+            }
+
+            await _productService.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+
 }
+        

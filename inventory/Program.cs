@@ -16,6 +16,8 @@ using System.Globalization;
 using inventory.Models;
 using inventory.Services.ProductRepo;
 using Microsoft.AspNetCore.DataProtection;
+using inventory.Services.CategoryRepo;
+using inventory.Services.SupplierRepo;
 
 
 
@@ -28,6 +30,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.ConfigureSameSiteNoneCookies();
 
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ISupplierService, SupplierService>();
 
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 

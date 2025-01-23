@@ -4,6 +4,7 @@
     ViewData["Title"] = "Product Details";
 }
 
+
 <div class="product-details-container">
 
     <a href="@Url.Action("Index", "Product")" class="btn btn-secondary">Back to List</a>
@@ -50,15 +51,16 @@
 
     <!-- Section 3: Actions -->
     <div class="actions-section">
-        <h3>Actions</h3>
-        <div class="action-buttons">
-            <a asp-area="" asp-asp-controller="Product" asp-action="Edit">Change Description</a>
-            <a asp-area="" asp-asp-controller="Product" asp-action="Edit">Change Supplier</a>
-            <a asp-area="" asp-asp-controller="Product" asp-action="Edit">Change Price</a>
-            <a asp-area="" asp-asp-controller="Product" asp-action="Edit">Change Image</a>
-            <a asp-area="" asp-asp-controller="Product" asp-action="Edit">Change Description</a>
-            <a asp-area="" asp-asp-controller="Product" asp-action="Edit">Remove Product</a>
-            <a asp-area="" asp-asp-controller="Product" asp-action="Edit">View Sales</a>
-        </div>
+    <h3>Actions</h3>
+    <div class="action-buttons">
+        <a asp-action="EditField" asp-route-id="@Model.ProductId" asp-route-field="description" class="btn btn-primary">Change Description</a>
+        <a asp-action="EditField" asp-route-id="@Model.ProductId" asp-route-field="supplier" class="btn btn-primary">Change Supplier</a>
+        <a asp-action="EditField" asp-route-id="@Model.ProductId" asp-route-field="price" class="btn btn-primary">Change Price</a>
+        <a asp-action="EditField" asp-route-id="@Model.ProductId" asp-route-field="image" class="btn btn-primary">Change Image</a>
+        <a asp-action="EditField" asp-route-id="@Model.ProductId" asp-route-field="quantity" class="btn btn-primary">restock</a>
+        <a asp-action="Delete" asp-route-id="@Model.ProductId" asp-route-field="remove" class="btn btn-danger">Remove Product</a>
+        <!--<a asp-action="ViewSales" asp-route-id="@Model.ProductId" class="btn btn-secondary">View Sales</a>-->
     </div>
+</div>
+
 </div>

@@ -17,12 +17,24 @@
       "PackagePath": "staticwebassets/css/site.css"
     },
     {
+      "Id": "/Users/breezy/Documents/breezy/third_year/ims/inventory/wwwroot/csvFiles/category_data 2.csv",
+      "PackagePath": "staticwebassets/csvFiles/category_data 2.csv"
+    },
+    {
       "Id": "/Users/breezy/Documents/breezy/third_year/ims/inventory/wwwroot/csvFiles/category_data.csv",
       "PackagePath": "staticwebassets/csvFiles/category_data.csv"
     },
     {
+      "Id": "/Users/breezy/Documents/breezy/third_year/ims/inventory/wwwroot/csvFiles/products_data 2.csv",
+      "PackagePath": "staticwebassets/csvFiles/products_data 2.csv"
+    },
+    {
       "Id": "/Users/breezy/Documents/breezy/third_year/ims/inventory/wwwroot/csvFiles/products_data.csv",
       "PackagePath": "staticwebassets/csvFiles/products_data.csv"
+    },
+    {
+      "Id": "/Users/breezy/Documents/breezy/third_year/ims/inventory/wwwroot/csvFiles/supplier_data 2.csv",
+      "PackagePath": "staticwebassets/csvFiles/supplier_data 2.csv"
     },
     {
       "Id": "/Users/breezy/Documents/breezy/third_year/ims/inventory/wwwroot/csvFiles/supplier_data.csv",

@@ -670,3 +670,6 @@
 /Users/breezy/Documents/breezy/third_year/ims/inventory/bin/Debug/net9.0/Microsoft.AspNetCore.Mvc.Razor.Extensions.dll
 /Users/breezy/Documents/breezy/third_year/ims/inventory/bin/Debug/net9.0/Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.dll
 /Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/inventory.MvcApplicationPartsAssemblyInfo.cs
+/Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/compressed/2j1jiv3yvl-58qzcsof5b.gz
+/Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/compressed/mzerjqfxqn-7b5tvcux71.gz
+/Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/compressed/wu3xvu7xtc-d5wpinxct4.gz
