@@ -112,25 +112,46 @@ public class ProductController : Controller
             
         }
 
-//add edit field for the product entities
+         //add edit field for the product entities
             public async Task<IActionResult> EditField(int id, string field)
             {
-                var product = await _productService.GetProductByIdAsync(id);
 
-                if (product == null)
-                {
-                    return NotFound();
+                try{
+                    var product = await _productService.GetProductByIdAsync(id);
+
+                    if (product == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Fetch dropdown data for suppliers and categories
+                    if (field.ToLower() == "supplier" || field.ToLower() == "category")
+                    {
+                        ViewBag.Categories =await _categoryService.GetCategories();
+                        ViewBag.Suppliers = await _supplierService.GetSuppliers();
+                    }
+
+                    ViewBag.FieldToEdit = field;
+
+                    ViewBag.FieldValue = field.ToLower() switch
+                    {
+                        "description" => (object)(product.Description ?? ""),
+                        "supplier" => (object)(product.Supplier?.Name ?? ""),
+                        "category" => (object)(product.Category?.Name ?? ""),
+                        "price" => (object)product.Price,
+                        "image" => (object)(product.ImageUrl ?? ""),
+                        _ => null
+                    };
+
+                    return View(product);
                 }
-
-                // Fetch dropdown data for suppliers and categories
-                if (field.ToLower() == "supplier" || field.ToLower() == "category")
-                {
-                    ViewBag.Categories =await _categoryService.GetCategories();
-                    ViewBag.Suppliers = await _supplierService.GetSuppliers();
+                catch{
+                    _logger.LogWarning("failure to get product details");
+                    return StatusCode(500, "Internal server error");
                 }
+               
 
-                ViewBag.FieldToEdit = field;
-                return View(product);
+               
             }
 
             [HttpPost]
@@ -174,7 +195,9 @@ public class ProductController : Controller
                         return BadRequest("Invalid field");
                 }
 
+                await _productService.UpdateProduct(product);
                 await _productService.SaveChangesAsync();
+                
                 TempData["SuccessMessage"] = "Changes have been saved successfully!";
 
                 return RedirectToAction("Details", new { id });

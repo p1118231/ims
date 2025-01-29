@@ -9,7 +9,7 @@
 <form asp-action="EditField" method="post" onsubmit="return confirmAndSave();">
     <input type="hidden" name="id" value="@Model.ProductId" />
     <input type="hidden" name="field" value="@ViewBag.FieldToEdit" />
-    <input type="hidden" id="newValue" name="newValue" />
+    
 
     @if (ViewBag.FieldToEdit.ToLower() == "supplier")
     {
@@ -57,7 +57,7 @@
     {
         <div class="form-group">
             <label for="newValue">New @ViewBag.FieldToEdit:</label>
-            <input type="text" name="newValue" id="newValue" class="form-control" required/>
+            <input type="text" name="newValue" id="newValue" class="form-control" value="@ViewBag.FieldValue"required/>
         </div>
     }
 
