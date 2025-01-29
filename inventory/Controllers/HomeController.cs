@@ -17,7 +17,7 @@ public class HomeController : Controller
     //[Authorize]
     public IActionResult Index()
     {
-        if (!User.Identity.IsAuthenticated)
+        if (User.Identity == null || !User.Identity.IsAuthenticated)
     {
         return RedirectToAction("SignIn","Account");
     }

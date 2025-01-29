@@ -138,6 +138,7 @@ public class ProductController : Controller
                         "description" => (object)(product.Description ?? ""),
                         "supplier" => (object)(product.Supplier?.Name ?? ""),
                         "category" => (object)(product.Category?.Name ?? ""),
+                        "quantity" => (object)product.Quantity,
                         "price" => (object)product.Price,
                         "image" => (object)(product.ImageUrl ?? ""),
                         _ => null
@@ -155,7 +156,7 @@ public class ProductController : Controller
             }
 
             [HttpPost]
-            public async Task<IActionResult> EditField(int id, string field, string newValue)
+            public async Task<IActionResult> EditField(int id, string field, string newValue, int? restockAmount)
             {
                 var product = await _productService.GetProductByIdAsync(id);
 
@@ -188,6 +189,20 @@ public class ProductController : Controller
                     case "price":
                         product.Price = decimal.Parse(newValue);
                         break;
+                    case "quantity":
+                        product.Quantity = int.Parse(newValue);
+                        break;
+                    case "restock":
+                        if (restockAmount.HasValue && restockAmount.Value > 0)
+                        {
+                            product.Quantity += restockAmount.Value; // Add restock amount to existing quantity
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("", "Restock amount must be greater than zero.");
+                            return View(product);
+                        }
+                        break;
                     case "image":
                         product.ImageUrl = newValue;
                         break;
@@ -197,7 +212,7 @@ public class ProductController : Controller
 
                 await _productService.UpdateProduct(product);
                 await _productService.SaveChangesAsync();
-                
+
                 TempData["SuccessMessage"] = "Changes have been saved successfully!";
 
                 return RedirectToAction("Details", new { id });
