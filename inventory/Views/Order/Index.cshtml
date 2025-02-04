@@ -1,0 +1,66 @@
+@model IEnumerable<inventory.Models.Orders.OrderViewModel>
+
+@{
+    ViewData["Title"] = "Order Index";
+}
+
+<h1>Orders</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Date</th>
+            <th>Items Count</th>
+            <th>Total Amount</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var order in Model)
+    {
+        <tr>
+            <td>@order.OrderId</td>
+            <td>@order.OrderDate.ToShortDateString()</td>
+            <td>@(order.Items?.Count ?? 0)</td>
+            <td>@(order.Items?.Sum(item => item.Price * item.Quantity) ?? 0).ToString("C")</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@order.OrderId" class="btn btn-primary">Edit</a>
+                <a asp-action="Details" asp-route-id="@order.OrderId" class="btn btn-secondary">Details</a>
+                <a asp-action="Delete" asp-route-id="@order.OrderId" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@section Scripts {
+    <canvas id="ordersChart" width="400" height="150"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('ordersChart').getContext('2d');
+        var ordersChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Select(order => order.OrderDate.ToShortDateString()))),
+                datasets: [{
+                    label: 'Total Sales per Day',
+                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.GroupBy(order => order.OrderDate.Date)
+                                    .Select(group => new { Date = group.Key, Total = group.Sum(order => order.Items?.Sum(item => item.Price * item.Quantity) ?? 0) })
+                                    .OrderBy(x => x.Date)
+                                    .Select(x => x.Total))),
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+}

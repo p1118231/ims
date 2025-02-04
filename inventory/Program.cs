@@ -18,6 +18,9 @@ using inventory.Services.ProductRepo;
 using Microsoft.AspNetCore.DataProtection;
 using inventory.Services.CategoryRepo;
 using inventory.Services.SupplierRepo;
+using inventory.Services.OrderRepo;
+using inventory.Services;
+
 
 
 
@@ -32,6 +35,7 @@ builder.Services.ConfigureSameSiteNoneCookies();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ISupplierService, SupplierService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
@@ -118,52 +122,24 @@ var app = builder.Build();
 
 if(builder.Environment.IsDevelopment()){
 
-// Use this code to insert products into the database once
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<ProductContext>();
+  
+ 
+    using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
 
-    // Check if the database is empty, then insert products from CSV
-    if (!dbContext.Product.Any())
-    {
-        
-        var csvFilePath = "wwwroot/csvFiles/products_data.csv";  // Adjust this path if necessary
-        using (var reader = new StreamReader(csvFilePath))
-        using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-        {
-            var products = csv.GetRecords<Product>().ToList();
-
-            // Insert products into the database
-            
-           
-        }
-
-        var categoryCsvFilePath = "wwwroot/csvFiles/category_data.csv";  // Adjust this path if necessary
-        using (var reader = new StreamReader(categoryCsvFilePath))
-        using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-        {
-            var categories = csv.GetRecords<Category>().ToList();
-
-            // Insert products into the database
-            dbContext.Categories.AddRange(categories);
-            
-        }
-
-        var supplierCsvFilePath = "wwwroot/csvFiles/supplier_data.csv";  // Adjust this path if necessary
-        using (var reader = new StreamReader(supplierCsvFilePath))
-        using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-        {
-            var suppliers = csv.GetRecords<Supplier>().ToList();
-
-            // Insert products into the database
-            dbContext.Suppliers.AddRange(suppliers);
-            
-        }
-
-        dbContext.SaveChanges();
-    }
+                try
+                {
+                    SeedData.Initialize(services);
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred while seeding the database.");
+                }
+            }
 }
-}
+
 
 
 if (app.Environment.IsDevelopment())

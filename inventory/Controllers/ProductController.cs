@@ -62,27 +62,45 @@ public class ProductController : Controller
     }
 
             [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            try{
+            ViewBag.Categories = await _categoryService.GetCategories();
+            ViewBag.Suppliers = await _supplierService.GetSuppliers();
             // Return the Create view with an empty product model
             return View();
+            }
+            catch{
+                _logger.LogWarning("failure to create product");
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Product product)
         {
+
+            try{
             if (ModelState.IsValid)
             {
                 // Call your service or database layer to add the product
                 await _productService.AddProduct(product);
+                await _productService.SaveChangesAsync();
 
                 // Redirect to the Index action after successful creation
                 return RedirectToAction(nameof(Index));
             }
-
+            // Repopulate dropdowns if form submission fails
+            ViewBag.Suppliers = await _supplierService.GetSuppliers();
+            ViewBag.Categories = await _categoryService.GetCategories();
             // If validation fails, return the form with the current model data
             return View(product);
+            }
+            catch{
+                _logger.LogWarning("failure to create product");
+                return StatusCode(500, "Internal server error");
+            }
         }
 
          public async Task<IActionResult> Details(int? id)

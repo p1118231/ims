@@ -15,7 +15,7 @@ namespace inventory.Services.SupplierRepo;
         }
 
         public async Task<Supplier?> GetSupplierByIdAsync(int? id){
-            return await _context.Suppliers.FindAsync(id);
+            return await _context.Suppliers.Include(s => s.Products).FirstOrDefaultAsync(s => s.SupplierId == id);
         }
 
         public async Task SaveChangesAsync(){
