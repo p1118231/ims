@@ -48,7 +48,7 @@ builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 //add database context
 builder.Services.AddDbContext<ProductContext>(options =>
 {
-    if (builder.Environment.IsDevelopment())
+   /* if (builder.Environment.IsDevelopment())
     {
         var folder = Environment.SpecialFolder.LocalApplicationData;
         var path = Environment.GetFolderPath(folder);
@@ -58,7 +58,7 @@ builder.Services.AddDbContext<ProductContext>(options =>
         options.EnableSensitiveDataLogging();
     }
     else
-    {
+    {*/
          var cs = builder.Configuration.GetConnectionString("ProductContext");
         options.UseSqlServer(cs, sqlServerOptionsAction: sqlOptions =>
             sqlOptions.EnableRetryOnFailure(
@@ -67,7 +67,7 @@ builder.Services.AddDbContext<ProductContext>(options =>
                 errorNumbersToAdd: null
             )
         );
-    }
+   // }
 });
 
 // Add session services

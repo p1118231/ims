@@ -4,7 +4,7 @@ namespace inventory.Services.OrderRepo;
 
 public interface IOrderService
 {
-    Task <IEnumerable<OrderViewModel>> GetOrders();
+    Task <IEnumerable<Order>> GetOrders();
     Task <OrderViewModel?> GetOrderByIdAsync(int? id);
     Task <bool> SaveChangesAsync();
     Task<bool> UpdateOrder(OrderViewModel order);

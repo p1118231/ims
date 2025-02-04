@@ -62,7 +62,8 @@ namespace inventory.Services.OrderRepo
                 OrderDate = order.OrderDate,
                 Items = order.OrderItems?.Select(oi => new OrderItemViewModel
                 {
-                    OrderItemId = oi.OrderItemId,
+                    OrderItemId = oi.Id,
+                    OrderId = oi.OrderId,
                     ProductId = oi.ProductId,
                     ProductName = oi.Product?.Name,
                     Quantity = oi.Quantity,
@@ -71,22 +72,23 @@ namespace inventory.Services.OrderRepo
             };
         }
 
-        public async Task<IEnumerable<OrderViewModel>> GetOrders()
+        public async Task<IEnumerable<Order>> GetOrders()
         {
             var orders = await _context.Orders
                 .Include(o => o.OrderItems!)
                 .ThenInclude(oi => oi.Product)
                 .ToListAsync();
 
-            return orders.Select(o => new OrderViewModel
+            return orders.Select(o => new Order
             {
-                OrderId = o.Id,
+                Id = o.Id,
                 OrderDate = o.OrderDate,
-                Items = o.OrderItems?.Select(oi => new OrderItemViewModel
+                OrderItems = o.OrderItems?.Select(oi => new OrderItem
                 {
-                    OrderItemId = oi.OrderItemId,
+                    Id = oi.Id,
                     ProductId = oi.ProductId,
-                    ProductName = oi.Product?.Name,
+                    OrderId = oi.OrderId,
+                    Product = oi.Product,
                     Quantity = oi.Quantity,
                     Price = oi.Price
                 }).ToList()
@@ -133,11 +135,11 @@ namespace inventory.Services.OrderRepo
 
             foreach (var orderItem in order.OrderItems)
             {
-                var orderItemViewModel = orderViewModel.Items?.FirstOrDefault(oi => oi.OrderItemId == orderItem.OrderItemId);
+                var orderItemViewModel = orderViewModel.Items?.FirstOrDefault(oi => oi.OrderItemId == orderItem.Id);
 
                 if (orderItemViewModel == null)
                 {
-                    _logger.LogError($"OrderItem with id {orderItem.OrderItemId} not found");
+                    _logger.LogError($"OrderItem with id {orderItem.Id} not found");
                     return false;
                 }
 

@@ -4,7 +4,7 @@ namespace inventory.Models.Orders;
 
 public class OrderItem
 {
-    public int OrderItemId { get; set; }
+    public int Id { get; set; }
     public int Quantity { get; set; }
 
     [Column(TypeName = "decimal(18, 2)")]

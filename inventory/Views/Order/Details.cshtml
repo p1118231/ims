@@ -1,0 +1,82 @@
+@model inventory.Models.Orders.OrderViewModel
+
+
+@{
+    ViewData["Title"] = "Order Details - #" + Model.OrderId;
+}
+
+<h1>Order Details for #@Model.OrderId</h1>
+
+<div class="card mb-3">
+    <div class="card-header">
+        Order Summary
+    </div>
+    <div class="card-body">
+        <p><strong>Date:</strong> @Model.OrderDate.ToString("dddd, MMMM dd, yyyy")</p>
+        <p><strong>Total Items:</strong> @Model.Items.Count()</p>
+        <p><strong>Total Amount:</strong> $@Model.Items.Sum(i => i.Quantity * i.Price).ToString("N2")</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <h2>Items Ordered</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.ProductName</td>
+                    <td>@item.Quantity</td>
+                    <td>$@item.Price.ToString("N2")</td>
+                    <td>$@(item.Price * item.Quantity)</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-4">
+        <h2>Analytics</h2>
+        <div id="itemsChart" style="width: 100%; height: 400px;"></div>
+    </div>
+</div>
+
+<a href="@Url.Action("Index", "Order")" class="btn btn-secondary mt-3">Back to List</a>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('itemsChart').getContext('2d');
+        var itemsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Items.Select(i => i.ProductName))),
+                datasets: [{
+                    label: 'Quantity per Item',
+                    data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Items.Select(i => i.Quantity))),
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+                responsive: true
+            }
+        });
+    </script>
+

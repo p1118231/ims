@@ -184,14 +184,14 @@ public class ProductController : Controller
                 }
 
 
-               /* if (string.IsNullOrEmpty(newValue))
+                if (string.IsNullOrEmpty(newValue))
                 {
                     ModelState.AddModelError("", "The new value cannot be empty.");
                     ViewBag.FieldToEdit = field; // Ensure FieldToEdit is set
                     ViewBag.Categories =await _categoryService.GetCategories();
                     ViewBag.Suppliers = await _supplierService.GetSuppliers();
                     return View(product);
-                }*/
+                }
 
                 switch (field.ToLower())
                 {

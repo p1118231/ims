@@ -17,24 +17,18 @@
     
     @if (ViewBag.FieldToEdit?.ToLower() == "supplier")
     {
-        <div class="form-group">
-            <label for="supplier-dropdown">Select New Supplier:</label>
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="supplier-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    Select Supplier
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="supplier-dropdown">
-                    @foreach (var supplier in ViewBag.Suppliers as List<Supplier>)
-                    {
-                        <li>
-                            <a class="dropdown-item" href="#" onclick="selectValue('@supplier.SupplierId', '@supplier.Name')">
-                                @supplier.Name
-                            </a>
-                        </li>
-                    }
-                </ul>
-            </div>
-        </div>
+       <div class="form-group">
+    <label for="SupplierId">Select New Supplier:</label>
+    <select class="form-control" id="SupplierId" name="newValue" onchange="selectValue(this.value, this.options[this.selectedIndex].text)">
+        <option value="">Select Supplier</option>
+        @foreach (var supplier in ViewBag.Suppliers as List<Supplier>)
+        {
+            <option value="@supplier.SupplierId">@supplier.Name</option>
+        }
+    </select>
+</div>
+
+
     }
     else if (ViewBag.FieldToEdit?.ToLower() == "category")
     {
