@@ -282,9 +282,7 @@
 /Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/scopedcss/projectbundle/inventory.bundle.scp.css
 /Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/compressed/l9k7yrz623-kj2i6kga8r.gz
 /Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/compressed/0ls6lv7bmv-1ck97c2vr9.gz
-/Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/compressed/1u9bfvjqaq-9dmn9l3zrp.gz
 /Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/compressed/y5pvyzviyl-61n19gt1b8.gz
-/Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/compressed/3bqkzn4ea5-xtxxf3hu2r.gz
 /Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/compressed/96afsloxq7-bqjiyaj88i.gz
 /Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/compressed/f55zxnhkrr-c2jlpeoesf.gz
 /Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/compressed/mg9zci77nz-erw9l3u2r3.gz
@@ -673,3 +671,5 @@
 /Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/compressed/2j1jiv3yvl-58qzcsof5b.gz
 /Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/compressed/mzerjqfxqn-7b5tvcux71.gz
 /Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/compressed/wu3xvu7xtc-d5wpinxct4.gz
+/Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/compressed/1u9bfvjqaq-eoe8a0kegl.gz
+/Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/compressed/3bqkzn4ea5-e5w79x3zav.gz

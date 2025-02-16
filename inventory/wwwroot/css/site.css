@@ -155,3 +155,24 @@ form.d-flex {
   outline: none; /* Remove the default focus outline */
   border: 1px solid rgba(12, 0, 0, 0.8); /* Brighten the border on focus */
 }
+
+.main-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  flex: 0 0 250px; /* Sidebar width */
+  background-color: #f8f9fa;
+}
+
+.content {
+  flex-grow: 1; /* Takes up remaining space */
+}
+
+.right-panel {
+  flex: 0 0 300px; /* Adjust width as needed */
+  background-color: #f4f4f4; /* Different background for contrast */
+  padding: 20px;
+  border-left: 1px solid #dee2e6; /* Separator */
+}

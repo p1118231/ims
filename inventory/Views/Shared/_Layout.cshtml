@@ -69,6 +69,46 @@
             @RenderBody()
         </main>
       </div>
+
+      <div class="right-panel">
+    <!-- Real-time Notifications -->
+    <div class="card mb-4">
+        <div class="card-header">
+            Notifications
+        </div>
+        <div class="card-body">
+            <ul id="notificationList" class="list-group">
+                <!-- Dynamic list of notifications -->
+            </ul>
+        </div>
+    </div>
+
+    <!-- Inventory Health -->
+    <div class="card mb-4">
+        <div class="card-header">
+            Inventory Health
+        </div>
+        <div class="card-body">
+            <ul class="list-group">
+                <li class="list-group-item">Current Stock: <span id="currentStock"></span></li>
+                <li class="list-group-item">Low Stock Items: <span id="lowStockCount"></span></li>
+                <li class="list-group-item">Overstocked Items: <span id="overstockCount"></span></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Support -->
+    <div class="card">
+        <div class="card-header">
+            Support
+        </div>
+        <div class="card-body">
+            <p>If you need help, please contact our support team.</p>
+            <button onclick="window.location.href='mailto:support@example.com';" class="btn btn-primary">Contact Support</button>
+        </div>
+    </div>
+</div>
+
        
     </div>
 

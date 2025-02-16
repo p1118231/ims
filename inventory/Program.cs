@@ -20,6 +20,7 @@ using inventory.Services.CategoryRepo;
 using inventory.Services.SupplierRepo;
 using inventory.Services.OrderRepo;
 using inventory.Services;
+using inventory.Services.SalesPrediction;
 
 
 
@@ -36,10 +37,11 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ISupplierService, SupplierService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IForecastService, ForecastService>();
 
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
-
+builder.Services.AddHttpClient();
 //builder.Services.AddDataProtection()
   //  .PersistKeysToFileSystem(new DirectoryInfo(@"C:\keys")) // Use a shared directory for load-balanced systems
    // .SetApplicationName("MyApp"); // Optional: To ensure isolation between apps
@@ -48,7 +50,7 @@ builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 //add database context
 builder.Services.AddDbContext<ProductContext>(options =>
 {
-   /* if (builder.Environment.IsDevelopment())
+   if (builder.Environment.IsDevelopment())
     {
         var folder = Environment.SpecialFolder.LocalApplicationData;
         var path = Environment.GetFolderPath(folder);
@@ -58,7 +60,7 @@ builder.Services.AddDbContext<ProductContext>(options =>
         options.EnableSensitiveDataLogging();
     }
     else
-    {*/
+    {
          var cs = builder.Configuration.GetConnectionString("ProductContext");
         options.UseSqlServer(cs, sqlServerOptionsAction: sqlOptions =>
             sqlOptions.EnableRetryOnFailure(
@@ -67,7 +69,7 @@ builder.Services.AddDbContext<ProductContext>(options =>
                 errorNumbersToAdd: null
             )
         );
-   // }
+    }
 });
 
 // Add session services
