@@ -21,6 +21,8 @@ using inventory.Services.SupplierRepo;
 using inventory.Services.OrderRepo;
 using inventory.Services;
 using inventory.Services.SalesPrediction;
+using inventory.Services.NotificationRepo;
+using inventory.Services.NotificationsRepo;
 
 
 
@@ -38,6 +40,9 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ISupplierService, SupplierService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IForecastService, ForecastService>();
+builder.Services.AddSignalR();
+builder.Services.AddHostedService<RabbitMQOrderListener>();
+
 
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
@@ -50,6 +55,7 @@ builder.Services.AddHttpClient();
 //add database context
 builder.Services.AddDbContext<ProductContext>(options =>
 {
+    
    if (builder.Environment.IsDevelopment())
     {
         var folder = Environment.SpecialFolder.LocalApplicationData;
@@ -172,6 +178,8 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
+
+app.MapHub<NotificationHub>("/notificationsHub");
 
 
 app.Run();

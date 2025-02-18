@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="~/IMSMVC.styles.css" asp-append-version="true" />
    <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
 
     
 </head>
@@ -23,7 +24,7 @@
     <nav class="navbar navbar-expand-sm navbar-light custom-navbar">
         <div class="container-fluid d-flex align-items-center">
             <!-- Logo -->
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+            <a class="navbar-brand" asp-area="" asp-controller="Dashboard" asp-action="Index">
                 <img src="~/images/ims_transparent-.png" alt="IMS" style="height: 40px;" />
             </a>
 
@@ -56,7 +57,7 @@
     
     <div class="main-container">
         <div class="sidebar">
-        <a asp-area="" asp-controller="Dashboard" asp-action="Index"><i class="bi bi-house-door"></i> Dashboard</a>
+        <a asp-area="" asp-controller="Home" asp-action="Index"><i class="bi bi-house-door"></i> Dashboard</a>
         <a asp-area="" asp-controller="Product" asp-action="Index"><i class="bi bi-box"></i> Products</a>
         <a asp-area="" asp-controller="Order" asp-action="Index"><i class="bi bi-cart"></i> Orders</a>
         <a asp-area="" asp-controller="Analytics" asp-action="Index"><i class="bi bi-graph-up"></i> Analytics</a>
@@ -74,12 +75,16 @@
     <!-- Real-time Notifications -->
     <div class="card mb-4">
         <div class="card-header">
-            Notifications
+            <h2>Notifications <span id="notificationCount" class="badge bg-secondary">0</span></h2>
         </div>
         <div class="card-body">
+            
             <ul id="notificationList" class="list-group">
                 <!-- Dynamic list of notifications -->
             </ul>
+            <button id="viewMore" class="btn btn-primary mt-2" style="display:none;" onclick="viewMore()">View More</button>
+             <button id="viewLess" class="btn btn-secondary mt-2" style="display:none;" onclick="viewLess()">View Less</button>
+ 
         </div>
     </div>
 

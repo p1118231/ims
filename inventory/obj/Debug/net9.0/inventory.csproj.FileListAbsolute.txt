@@ -672,4 +672,5 @@
 /Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/compressed/mzerjqfxqn-7b5tvcux71.gz
 /Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/compressed/wu3xvu7xtc-d5wpinxct4.gz
 /Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/compressed/1u9bfvjqaq-eoe8a0kegl.gz
-/Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/compressed/3bqkzn4ea5-e5w79x3zav.gz
+/Users/breezy/Documents/breezy/third_year/ims/inventory/bin/Debug/net9.0/RabbitMQ.Client.dll
+/Users/breezy/Documents/breezy/third_year/ims/inventory/obj/Debug/net9.0/compressed/3bqkzn4ea5-fnryehv2ch.gz

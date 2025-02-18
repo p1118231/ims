@@ -1,29 +1,57 @@
 ﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
 // for details on configuring this project to bundle and minify static web assets.
 
-// Write your JavaScript code.
-document.addEventListener('DOMContentLoaded', function() {
-    // Function to fetch and display notifications
-    function loadNotifications() {
-        // Simulate fetching data
-        const notifications = ['New order placed', 'Item 123 low in stock', 'New supplier added'];
-        const list = document.getElementById('notificationList');
-        list.innerHTML = '';
-        notifications.forEach(notif => {
-            const li = document.createElement('li');
-            li.className = 'list-group-item';
-            li.textContent = notif;
-            list.appendChild(li);
+
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/notificationsHub")
+            .build();
+
+        const maxVisibleNotifications = 3;
+        let notifications = [];
+        let isViewingMore = false;
+
+        connection.on("ReceiveNotification", function (message) {
+            const newItem = document.createElement("li");
+            newItem.classList.add("list-group-item");
+            newItem.innerHTML = `${message} <button class="close" onclick="removeNotification(this)">&times;</button>`;
+
+            notifications.unshift(newItem); // Add to the start of the array
+            updateNotificationDisplay();
         });
-    }
 
-    // Function to update inventory health
-    function updateInventory() {
-        document.getElementById('currentStock').textContent = '500 items';
-        document.getElementById('lowStockCount').textContent = '15 items';
-        document.getElementById('overstockCount').textContent = '8 items';
-    }
+        function updateNotificationDisplay() {
+            const notificationList = document.getElementById("notificationList");
+            notificationList.innerHTML = ''; // Clear current notifications
 
-    loadNotifications();
-    updateInventory();
-});
+            const visibleNotifications = isViewingMore ? notifications : notifications.slice(0, maxVisibleNotifications);
+            visibleNotifications.forEach(item => {
+                notificationList.appendChild(item);
+            });
+
+            document.getElementById("notificationCount").textContent = notifications.length;
+            document.getElementById("notificationCount").className = `badge bg-${notifications.length > 0 ? 'primary' : 'secondary'}`;
+
+            document.getElementById("viewMore").style.display = notifications.length > maxVisibleNotifications && !isViewingMore ? '' : 'none';
+            document.getElementById("viewLess").style.display = isViewingMore ? '' : 'none';
+        }
+
+        function viewMore() {
+            isViewingMore = true;
+            updateNotificationDisplay();
+        }
+
+        function viewLess() {
+            isViewingMore = false;
+            updateNotificationDisplay();
+        }
+
+        function removeNotification(button) {
+            const li = button.parentNode;
+            notifications = notifications.filter(item => item !== li);
+            updateNotificationDisplay();
+        }
+
+        connection.start().catch(function (err) {
+            return console.error(err.toString());
+        });
+    

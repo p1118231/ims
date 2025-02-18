@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "kNoxMqibP3E=",
+  "dgSpecHash": "1bOKITn80dY=",
   "success": true,
   "projectFilePath": "/Users/breezy/Documents/breezy/third_year/ims/inventory/inventory.csproj",
   "expectedPackageFiles": [
@@ -143,6 +143,7 @@
     "/Users/breezy/.nuget/packages/nuget.projectmodel/6.11.0/nuget.projectmodel.6.11.0.nupkg.sha512",
     "/Users/breezy/.nuget/packages/nuget.protocol/6.11.0/nuget.protocol.6.11.0.nupkg.sha512",
     "/Users/breezy/.nuget/packages/nuget.versioning/6.11.0/nuget.versioning.6.11.0.nupkg.sha512",
+    "/Users/breezy/.nuget/packages/rabbitmq.client/6.2.1/rabbitmq.client.6.2.1.nupkg.sha512",
     "/Users/breezy/.nuget/packages/sqlitepclraw.bundle_e_sqlite3/2.1.10/sqlitepclraw.bundle_e_sqlite3.2.1.10.nupkg.sha512",
     "/Users/breezy/.nuget/packages/sqlitepclraw.core/2.1.10/sqlitepclraw.core.2.1.10.nupkg.sha512",
     "/Users/breezy/.nuget/packages/sqlitepclraw.lib.e_sqlite3/2.1.10/sqlitepclraw.lib.e_sqlite3.2.1.10.nupkg.sha512",

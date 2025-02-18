@@ -1,39 +1,47 @@
 using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
 using inventory.Models;
-using Microsoft.AspNetCore.Authorization;
+using inventory.Services.SalesPrediction;
+using Microsoft.AspNetCore.Mvc;
 
-namespace inventory.Controllers;
-
-public class HomeController : Controller
+namespace inventory.Controllers
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
+    
+   // [ApiController]
+    public class HomeController : Controller
     {
-        _logger = logger;
-    }
+        private readonly IForecastService _forecastService;
+        private readonly ILogger<HomeController> _logger;
 
-    //[Authorize]
-    public IActionResult Index()
-    {
-        if (User.Identity == null || !User.Identity.IsAuthenticated)
-    {
-        return RedirectToAction("SignIn","Account");
-    }
+        public HomeController(IForecastService forecastService, ILogger<HomeController> logger)
+        {
+            _forecastService = forecastService;
+            _logger = logger;
+        }
 
-        return View();
-    }
+        [HttpGet]
+        public async Task<ActionResult> Index()
+        {
+            SalesForecastResponse forecast = null!;
+            try
+            {
+                forecast = await _forecastService.GetTodaysSalesForecastAsync();
+                
+            }
+            catch (Exception ex)
+            {
+                forecast = new SalesForecastResponse();
+                _logger.LogError(ex, "An error occurred while fetching the sales forecast");
+                return StatusCode(500, "An error occurred while fetching the sales forecast");
+                
+            }
 
-   // [Authorize]
-    public IActionResult Privacy()
-    {
-        return View();
-    }
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-    }
+            return View(forecast);
+           
+        }
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+        }
 }
