@@ -6,6 +6,7 @@ using inventory.Services.ProductRepo;
 using System.Threading.Tasks;
 using inventory.Services.CategoryRepo;
 using inventory.Services.SupplierRepo;
+using inventory.Services.PriceOptimisation;
 
 
 namespace inventory.Controllers;
@@ -20,12 +21,15 @@ public class ProductController : Controller
 
     private readonly ISupplierService _supplierService;
 
-    public ProductController(ILogger<ProductController> logger, IProductService productService, ICategoryService categoryService, ISupplierService supplierService)
+    private readonly IPricePredictionService _pricePredictionService;
+
+    public ProductController(ILogger<ProductController> logger, IProductService productService, ICategoryService categoryService, ISupplierService supplierService, IPricePredictionService pricePredictionService)
     {
         _logger = logger;
         _productService = productService;
         _categoryService = categoryService;
         _supplierService = supplierService;
+        _pricePredictionService = pricePredictionService;
     }
     
     
@@ -114,6 +118,10 @@ public class ProductController : Controller
             try{
 
              product = await _productService.GetProductByIdAsync(id);
+
+             //get the predicted price for the product
+             var predictedPrice = await _pricePredictionService.PredictPriceAsync(id??0);
+             ViewBag.PredictedPrice = predictedPrice?.predicted_price ?? 0;
 
             if (product == null)
             {

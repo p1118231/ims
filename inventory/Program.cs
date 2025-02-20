@@ -23,6 +23,7 @@ using inventory.Services;
 using inventory.Services.SalesPrediction;
 using inventory.Services.NotificationRepo;
 using inventory.Services.NotificationsRepo;
+using inventory.Services.PriceOptimisation;
 
 
 
@@ -42,6 +43,7 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IForecastService, ForecastService>();
 builder.Services.AddSignalR();
 builder.Services.AddHostedService<RabbitMQOrderListener>();
+builder.Services.AddScoped<IPricePredictionService, PricePredictionService>();
 
 
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
