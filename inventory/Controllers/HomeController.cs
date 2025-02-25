@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using inventory.Models;
+using inventory.Services.NotificationRepo;
 using inventory.Services.SalesPrediction;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,12 +11,15 @@ namespace inventory.Controllers
     public class HomeController : Controller
     {
         private readonly IForecastService _forecastService;
+
+        private readonly INotificationService _notificationService;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(IForecastService forecastService, ILogger<HomeController> logger)
+        public HomeController(IForecastService forecastService, ILogger<HomeController> logger, INotificationService notificationService)
         {
             _forecastService = forecastService;
             _logger = logger;
+            _notificationService = notificationService;
         }
 
         [HttpGet]
@@ -24,6 +28,7 @@ namespace inventory.Controllers
             SalesForecastResponse forecast = null!;
             try
             {
+               
                 forecast = await _forecastService.GetTodaysSalesForecastAsync();
                 
             }

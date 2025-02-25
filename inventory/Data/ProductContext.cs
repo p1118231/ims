@@ -22,6 +22,8 @@ namespace inventory.Data
         public DbSet<Order> Orders { get; set; } = default!;
         public DbSet<OrderItem> OrderItems { get; set; } = default!;
 
+        public DbSet<Notification> Notifications { get; set; } = default!;
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

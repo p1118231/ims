@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using inventory.Services.CategoryRepo;
 using inventory.Services.SupplierRepo;
 using inventory.Services.PriceOptimisation;
+using inventory.Services.NotificationRepo;
 
 
 namespace inventory.Controllers;
@@ -22,14 +23,16 @@ public class ProductController : Controller
     private readonly ISupplierService _supplierService;
 
     private readonly IPricePredictionService _pricePredictionService;
+    private readonly INotificationService _notificationService;
 
-    public ProductController(ILogger<ProductController> logger, IProductService productService, ICategoryService categoryService, ISupplierService supplierService, IPricePredictionService pricePredictionService)
+    public ProductController(ILogger<ProductController> logger, IProductService productService, ICategoryService categoryService, ISupplierService supplierService, IPricePredictionService pricePredictionService, INotificationService notificationService)
     {
         _logger = logger;
         _productService = productService;
         _categoryService = categoryService;
         _supplierService = supplierService;
         _pricePredictionService = pricePredictionService;
+        _notificationService = notificationService;
     }
     
     
@@ -238,6 +241,11 @@ public class ProductController : Controller
 
                 await _productService.UpdateProduct(product);
                 await _productService.SaveChangesAsync();
+                await _notificationService.CreateNotificationAsync(new Notification
+                {
+                    Date = DateTime.Now,
+                    Message = $"Product {product.Name} has been updated"
+                });
 
                 TempData["SuccessMessage"] = "Changes have been saved successfully!";
 

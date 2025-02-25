@@ -32,11 +32,18 @@
             <!-- Notifications and Profile -->
             <ul class="navbar-nav ms-auto d-flex align-items-center">
                 <!-- Notifications -->
-                <li class="nav-item">
-                    <button class="btn btn-outline-secondary me-2">
-                        <i class="bi bi-bell"></i>
-                    </button>
-                </li>
+                <li class="nav-item dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" id="notificationDropdown">
+                    Notifications <span id="notificationCount" class="badge bg-danger">0</span>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="notificationDropdown">
+                    <ul id="notificationList" class="list-group">
+                        <!-- Notification items will be inserted here -->
+                    </ul>
+                    <a href="#" id="viewAllNotifications" class="dropdown-item text-center" style="display:none;">View All</a>
+                    <a href="#" id="viewLessNotifications" class="dropdown-item text-center" style="display:none;">View Less</a>
+                </div>
+            </li>
 
                 <!-- Profile Dropdown -->
                 <li class="nav-item dropdown">
@@ -75,7 +82,7 @@
     <!-- Real-time Notifications -->
     <div class="card mb-4">
         <div class="card-header">
-            <h2>Notifications <span id="notificationCount" class="badge bg-secondary">0</span></h2>
+            <h2>Live Orders <span id="notificationCount" class="badge bg-secondary">0</span></h2>
         </div>
         <div class="card-body">
             
@@ -121,6 +128,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>  

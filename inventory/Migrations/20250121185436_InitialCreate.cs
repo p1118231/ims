@@ -11,7 +11,7 @@ namespace inventory.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
+          /*  migrationBuilder.CreateTable(
                 name: "Categories",
                 columns: table => new
                 {
@@ -151,6 +151,7 @@ namespace inventory.Migrations
 
             migrationBuilder.DropTable(
                 name: "Suppliers");
-        }
+        }*/
     }
+}
 }

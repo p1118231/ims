@@ -54,4 +54,65 @@
         connection.start().catch(function (err) {
             return console.error(err.toString());
         });
-    
+
+        $(document).ready(function() {
+            const maxVisibleNotifications = 3;
+            let allNotifications = [];
+            let showingAll = false;
+        
+            // Fetch notifications from the server
+            function fetchNotifications() {
+                $.get("/api/notifications", function(data) {
+                    allNotifications = data; // Store all fetched notifications
+                    displayNotifications();
+                });
+            }
+        
+            // Display notifications in the dropdown
+            function displayNotifications() {
+                const notificationsToShow = showingAll ? allNotifications : allNotifications.slice(0, maxVisibleNotifications);
+                const notificationList = $('#notificationList');
+                notificationList.empty(); // Clear current notifications
+        
+                notificationsToShow.forEach(notification => {
+                    const notificationItem = $('<li class="list-group-item"></li>').text(notification.message);
+                    notificationList.append(notificationItem);
+                });
+        
+                $('#notificationCount').text(allNotifications.length);
+                $('#viewAllNotifications').toggle(allNotifications.length > maxVisibleNotifications && !showingAll);
+                $('#viewLessNotifications').toggle(showingAll);
+            }
+        
+            // Event listeners for view more and view less
+            $('#viewAllNotifications').click(function() {
+                showingAll = true;
+                displayNotifications();
+            });
+        
+            $('#viewLessNotifications').click(function() {
+                showingAll = false;
+                displayNotifications();
+            });
+        
+            // Initial fetch and setup periodic updates
+            fetchNotifications();
+            setInterval(fetchNotifications, 30000); // Refresh notifications every 30 seconds
+        
+            // Setup dropdown toggle behavior
+            $('#notificationDropdown').on('click', function(e) {
+                e.stopPropagation(); // Prevents the dropdown from closing immediately when clicked
+                $(this).parent().toggleClass('show'); // Toggle the 'show' class that controls dropdown visibility
+                $(this).next('.dropdown-menu').toggleClass('show'); // Toggle the visibility of the dropdown menu
+            });
+        
+            // Close dropdown when clicking outside
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.dropdown').length) {
+                    $('.dropdown').removeClass('show');
+                    $('.dropdown-menu').removeClass('show');
+                }
+            });
+        });
+
+        

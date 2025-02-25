@@ -44,6 +44,7 @@ builder.Services.AddScoped<IForecastService, ForecastService>();
 builder.Services.AddSignalR();
 builder.Services.AddHostedService<RabbitMQOrderListener>();
 builder.Services.AddScoped<IPricePredictionService, PricePredictionService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
@@ -77,7 +78,7 @@ builder.Services.AddDbContext<ProductContext>(options =>
                 errorNumbersToAdd: null
             )
         );
-    }
+   }
 });
 
 // Add session services
