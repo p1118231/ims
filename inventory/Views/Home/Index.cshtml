@@ -1,6 +1,4 @@
-@model inventory.Services.SalesPrediction.SalesForecastResponse
-
-
+@model inventory.Services.DashboardRepo.HomeViewModel
 
 @{
     ViewData["Title"] = "Dashboard";
@@ -8,84 +6,70 @@
 
 <h1>Dashboard</h1>
 
-@if (Model != null)
-{
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card text-white bg-success mb-3">
-                    <div class="card-header">Today's Sales Forecast</div>
-                    <div class="card-body">
-                        <h5 class="card-title">@Model.daily_sales.ToString("C")</h5>
-                        <p class="card-text">Forecasted sales for today.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card text-white bg-info mb-3">
-                    <div class="card-header">This Week's Sales Forecast</div>
-                    <div class="card-body">
-                        <h5 class="card-title">@Model.weekly_sales.ToString("C")</h5>
-                        <p class="card-text">Projected sales for the current week.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card text-white bg-warning mb-3">
-                    <div class="card-header">This Month's Sales Forecast</div>
-                    <div class="card-body">
-                        <h5 class="card-title">@Model.monthly_sales.ToString("C")</h5>
-                        <p class="card-text">Estimated sales for the month.</p>
-                    </div>
+<div class="container mt-5">
+    <h1 class="display-4 text-center mb-4">Dashboard Overview</h1>
+
+    <div class="row text-center">
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Inventory Count</h5>
+                    <p class="card-text display-6">@Model.inventoryCount</p>
+                    <p class="card-text text-secondary">Total products in inventory</p>
                 </div>
             </div>
         </div>
-
-        <!-- Placeholder for additional dashboard widgets or charts -->
-        <div class="row">
-            <div class="col-12">
-                <!-- Potential area for a chart/graph -->
-                <div id="salesChart"></div>
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Today's Sales Count</h5>
+                    <p class="card-text display-6">@Model.todaySalesCount</p>
+                    <p class="card-text text-secondary">Number of sales today</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Today's Sales Value</h5>
+                    <p class="card-text display-6">£@Model.todaySalesValue.ToString("N2")</p>
+                    <p class="card-text text-secondary">Total value of today's sales</p>
+                </div>
             </div>
         </div>
     </div>
-}
-else
-{
-    <div class="alert alert-warning" role="alert">
-        Unable to load sales forecast data.
-    </div>
-}
 
-@section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        // Example to initiate a chart if you decide to add a graph
-        // Assume you have the canvas element with id 'salesChart'
-        var ctx = document.getElementById('salesChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'line', // or 'bar', 'pie', etc.
-            data: {
-                labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-                datasets: [{
-                    label: 'Sales over the week',
-                    data: [12, 19, 3, 5, 2, 3],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    Low Stock Products
+                </div>
+                <ul class="list-group list-group-flush">
+                    @foreach(var product in Model.lowStockProducts)
+                    {
+                        <li class="list-group-item">
+                            @product.Name - @product.Quantity left
+                        </li>
                     }
-                }
-            }
-        });
-    </script>
-}
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-success text-white">
+                    Recent Orders
+                </div>
+                <ul class="list-group list-group-flush">
+                    @foreach(var order in Model.recentOrders)
+                    {
+                        <li class="list-group-item">
+                            Order #@order.Id - @order.OrderDate.ToString("dd/MM/yyyy")
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -150,4 +150,51 @@ namespace inventory.Services.OrderRepo
             await _context.SaveChangesAsync();
             return true;
         }
-    }}
+
+        public async Task<IEnumerable<Order>> GetRecentOrders()
+        {
+            var orders = await _context.Orders
+                .Include(o => o.OrderItems!)
+                .ThenInclude(oi => oi.Product)
+                .OrderByDescending(o => o.OrderDate)
+                .Take(5)
+                .ToListAsync();
+
+            return orders.Select(o => new Order
+            {
+                Id = o.Id,
+                OrderDate = o.OrderDate,
+                OrderItems = o.OrderItems?.Select(oi => new OrderItem
+                {
+                    Id = oi.Id,
+                    ProductId = oi.ProductId,
+                    OrderId = oi.OrderId,
+                    Product = oi.Product,
+                    Quantity = oi.Quantity,
+                    Price = oi.Price
+                }).ToList()
+            });
+        }
+
+        public Task<int> GetOrderCount()
+        {
+            return _context.Orders.CountAsync();
+        }
+
+        public Task<int> GetTodaySalesCount()
+        {
+            return _context.Orders
+                .Where(o => o.OrderDate.Date == DateTime.Today)
+                .CountAsync();
+        }
+
+        public Task<decimal> GetTodaySalesValue()
+        {
+            return _context.Orders
+                .Where(o => o.OrderDate.Date == DateTime.Today)
+                .SumAsync(o => o.TotalPrice);
+        }
+
+        
+    }
+}

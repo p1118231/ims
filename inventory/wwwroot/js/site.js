@@ -28,8 +28,8 @@
                 notificationList.appendChild(item);
             });
 
-            document.getElementById("notificationCount").textContent = notifications.length;
-            document.getElementById("notificationCount").className = `badge bg-${notifications.length > 0 ? 'primary' : 'secondary'}`;
+            document.getElementById("notificationCounts").textContent = notifications.length;
+            document.getElementById("notificationCounts").className = `badge bg-${notifications.length > 0 ? 'primary' : 'secondary'}`;
 
             document.getElementById("viewMore").style.display = notifications.length > maxVisibleNotifications && !isViewingMore ? '' : 'none';
             document.getElementById("viewLess").style.display = isViewingMore ? '' : 'none';
@@ -55,64 +55,17 @@
             return console.error(err.toString());
         });
 
-        $(document).ready(function() {
-            const maxVisibleNotifications = 3;
-            let allNotifications = [];
-            let showingAll = false;
-        
-            // Fetch notifications from the server
-            function fetchNotifications() {
-                $.get("/api/notifications", function(data) {
-                    allNotifications = data; // Store all fetched notifications
-                    displayNotifications();
-                });
+        // Fetch the initial notification count
+        async function fetchNotificationCount() {
+            try {
+            const response = await fetch('api/notifications/count');
+            const count = await response.json();
+            document.getElementById("notificationCount").textContent = count;
+            document.getElementById("notificationCount").className = `badge bg-${count > 0 ? 'primary' : 'secondary'}`;
+            } catch (error) {
+            console.error('Error fetching notification count:', error);
             }
-        
-            // Display notifications in the dropdown
-            function displayNotifications() {
-                const notificationsToShow = showingAll ? allNotifications : allNotifications.slice(0, maxVisibleNotifications);
-                const notificationList = $('#notificationList');
-                notificationList.empty(); // Clear current notifications
-        
-                notificationsToShow.forEach(notification => {
-                    const notificationItem = $('<li class="list-group-item"></li>').text(notification.message);
-                    notificationList.append(notificationItem);
-                });
-        
-                $('#notificationCount').text(allNotifications.length);
-                $('#viewAllNotifications').toggle(allNotifications.length > maxVisibleNotifications && !showingAll);
-                $('#viewLessNotifications').toggle(showingAll);
-            }
-        
-            // Event listeners for view more and view less
-            $('#viewAllNotifications').click(function() {
-                showingAll = true;
-                displayNotifications();
-            });
-        
-            $('#viewLessNotifications').click(function() {
-                showingAll = false;
-                displayNotifications();
-            });
-        
-            // Initial fetch and setup periodic updates
-            fetchNotifications();
-            setInterval(fetchNotifications, 30000); // Refresh notifications every 30 seconds
-        
-            // Setup dropdown toggle behavior
-            $('#notificationDropdown').on('click', function(e) {
-                e.stopPropagation(); // Prevents the dropdown from closing immediately when clicked
-                $(this).parent().toggleClass('show'); // Toggle the 'show' class that controls dropdown visibility
-                $(this).next('.dropdown-menu').toggleClass('show'); // Toggle the visibility of the dropdown menu
-            });
-        
-            // Close dropdown when clicking outside
-            $(document).on('click', function(e) {
-                if (!$(e.target).closest('.dropdown').length) {
-                    $('.dropdown').removeClass('show');
-                    $('.dropdown-menu').removeClass('show');
-                }
-            });
-        });
+        }
 
-        
+        setInterval(fetchNotificationCount, 5000); // Refresh every 5 seconds
+        fetchNotificationCount(); // Initial fetch

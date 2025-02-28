@@ -14,5 +14,7 @@ public interface INotificationService
         Task MarkNotificationAsReadAsync(int id);
 
         Task<List<Notification>> GetAllUnreadNotificationsAsync();
+
+        Task<int> GetAllUnreadNotificationCountAsync();
     
 }

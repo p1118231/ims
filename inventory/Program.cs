@@ -24,6 +24,7 @@ using inventory.Services.SalesPrediction;
 using inventory.Services.NotificationRepo;
 using inventory.Services.NotificationsRepo;
 using inventory.Services.PriceOptimisation;
+using inventory.Services.DashboardRepo;
 
 
 
@@ -45,14 +46,14 @@ builder.Services.AddSignalR();
 builder.Services.AddHostedService<RabbitMQOrderListener>();
 builder.Services.AddScoped<IPricePredictionService, PricePredictionService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
+builder.Services.AddHostedService<ProductCheckService>();
+
 
 
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
 builder.Services.AddHttpClient();
-//builder.Services.AddDataProtection()
-  //  .PersistKeysToFileSystem(new DirectoryInfo(@"C:\keys")) // Use a shared directory for load-balanced systems
-   // .SetApplicationName("MyApp"); // Optional: To ensure isolation between apps
 
 
 //add database context

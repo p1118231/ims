@@ -5,7 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using inventory.Models;
 using inventory.Data;
-using Microsoft.EntityFrameworkCore; // Ensure the correct namespace for ProductDto
+using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
+using inventory.Services.NotificationRepo; // Ensure the correct namespace for ProductDto
 
 namespace inventory.Services.ProductRepo
 {
@@ -13,10 +15,12 @@ namespace inventory.Services.ProductRepo
     {
 
         private readonly ProductContext _context;
+        private readonly INotificationService _notificationService;
 
-            public ProductService(ProductContext context)
+            public ProductService(ProductContext context, INotificationService notificationService)
         {
             _context = context;
+            _notificationService = notificationService;
         }
 
         public async Task<bool> AddProduct(Product product)
@@ -65,6 +69,39 @@ namespace inventory.Services.ProductRepo
          _context.Product.Update(product);
         await _context.SaveChangesAsync();
         return true;
+        }
+
+        public async Task CheckAndRestockProduct()
+        {
+            // Check if product is below reorder level
+            var products = await _context.Product.ToListAsync();
+            foreach (var product in products)
+            {
+                if (product.Quantity < 100) //default reorder level
+                {
+                    product.Quantity += 100;
+                    _context.Product.Update(product);
+                    var notification = new Notification()
+                    {
+                      
+                        Message = $"Product {product.Name} has been restocked to {product.Quantity}",
+                        Date = System.DateTime.Now
+                    };
+                    await _notificationService.CreateNotificationAsync(notification);
+
+                }
+            }
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<Product>> GetLowStockProducts()
+        {
+            return await _context.Product.Where(p => p.Quantity < 120).ToListAsync();
+        }
+
+        public async Task<int> GetProductCount()
+        {
+            return await _context.Product.CountAsync();
         }
     }
 }

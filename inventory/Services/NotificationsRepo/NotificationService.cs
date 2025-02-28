@@ -66,5 +66,11 @@ public class NotificationService : INotificationService
         {
             return await _context.Notifications.Where(n => !n.IsRead).ToListAsync();
         }
+
+        public async Task<int> GetAllUnreadNotificationCountAsync()
+        {
+            return await _context.Notifications.CountAsync(n => !n.IsRead);
+        }
+
     
 }

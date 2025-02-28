@@ -11,4 +11,10 @@ public interface IOrderService
     Task<bool> AddOrder(OrderViewModel order);
     Task<bool> RemoveOrder(Order order);
     Task <bool> OrderExists(int id);
+
+    Task<IEnumerable<Order>> GetRecentOrders();
+    Task<int> GetOrderCount();
+    Task<int> GetTodaySalesCount();
+    Task<decimal> GetTodaySalesValue();
+    
 }

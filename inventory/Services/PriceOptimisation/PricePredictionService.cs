@@ -20,12 +20,19 @@ public class PricePredictionService: IPricePredictionService
 
     public async Task<PricePredictionResponse> PredictPriceAsync(int productId)
     {
+        try {
         HttpResponseMessage response = await _client.GetAsync($"predict/{productId}");
         response.EnsureSuccessStatusCode();
         var responseBody = await response.Content.ReadAsStringAsync();
         var prediction = JsonSerializer.Deserialize<PricePredictionResponse>(responseBody);
         //Console.WriteLine(prediction.PredictedPrice);
         return prediction?? new PricePredictionResponse();
+        }
+        catch (HttpRequestException e)
+        {
+            Console.WriteLine($"An error occurred: {e.Message}");
+            return new PricePredictionResponse();
+        }
     }
 
     

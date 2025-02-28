@@ -17,6 +17,12 @@ public interface IProductService{
 
     Task<bool> RemoveProduct(Product product);
 
+    Task<IEnumerable<Product>> GetLowStockProducts();
+
+    Task<int> GetProductCount();
+
+    Task CheckAndRestockProduct();
+
     bool ProductExists(int id);
 
     

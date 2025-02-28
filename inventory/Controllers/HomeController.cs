@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using inventory.Models;
+using inventory.Services.DashboardRepo;
 using inventory.Services.NotificationRepo;
 using inventory.Services.SalesPrediction;
 using Microsoft.AspNetCore.Mvc;
@@ -13,34 +14,38 @@ namespace inventory.Controllers
         private readonly IForecastService _forecastService;
 
         private readonly INotificationService _notificationService;
+        private readonly IDashboardService _dashboardService;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(IForecastService forecastService, ILogger<HomeController> logger, INotificationService notificationService)
+        public HomeController(IForecastService forecastService, ILogger<HomeController> logger, INotificationService notificationService, IDashboardService dashboardService)
         {
             _forecastService = forecastService;
             _logger = logger;
             _notificationService = notificationService;
+            _dashboardService = dashboardService;
         }
 
         [HttpGet]
         public async Task<ActionResult> Index()
         {
-            SalesForecastResponse forecast = null!;
+            HomeViewModel dashboard = null!;
+
             try
             {
-               
-                forecast = await _forecastService.GetTodaysSalesForecastAsync();
+                dashboard = await _dashboardService.GetDashboardData();
+                Console.WriteLine(dashboard);
                 
             }
             catch (Exception ex)
             {
-                forecast = new SalesForecastResponse();
-                _logger.LogError(ex, "An error occurred while fetching the sales forecast");
-                return StatusCode(500, "An error occurred while fetching the sales forecast");
+                dashboard = new HomeViewModel();
+                
+                _logger.LogError(ex, "An error occurred while fetching the sales dashboard data");  
+                return StatusCode(500, "An error occurred while fetching the sales dashboard data");
                 
             }
 
-            return View(forecast);
+            return View(dashboard);
            
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
