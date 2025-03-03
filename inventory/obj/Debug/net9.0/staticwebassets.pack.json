@@ -53,6 +53,10 @@
       "PackagePath": "staticwebassets/images/ims_transparent-.png"
     },
     {
+      "Id": "/Users/breezy/Documents/breezy/third_year/ims/inventory/wwwroot/js/analytics.js",
+      "PackagePath": "staticwebassets/js/analytics.js"
+    },
+    {
       "Id": "/Users/breezy/Documents/breezy/third_year/ims/inventory/wwwroot/js/site.js",
       "PackagePath": "staticwebassets/js/site.js"
     },
