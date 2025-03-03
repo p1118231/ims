@@ -8,6 +8,7 @@ using inventory.Services.CategoryRepo;
 using inventory.Services.SupplierRepo;
 using inventory.Services.PriceOptimisation;
 using inventory.Services.NotificationRepo;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 
 namespace inventory.Controllers;
@@ -36,9 +37,11 @@ public class ProductController : Controller
     }
     
     
-    public async Task<IActionResult> Index(string? query)
+    public async Task<IActionResult> Index(string? query, int ? categoryId, int ? supplierId)
     {
         IEnumerable<Product> products = null!;
+        IEnumerable<Category> categories = null!;
+        IEnumerable<Supplier> suppliers = null!;
 
             try{
 
@@ -46,16 +49,41 @@ public class ProductController : Controller
             {
                 // Fetch products that match the search query
                 var allProducts = await _productService.GetProducts();
+                categories = await _categoryService.GetCategories();
+                suppliers = await _supplierService.GetSuppliers();
                 products = allProducts?.Where(p => (p.Name??"").Contains(query, StringComparison.OrdinalIgnoreCase)) ?? Enumerable.Empty<Product>();
+            }
+            else if(categoryId.HasValue)
+            {
+                // Fetch products that match the selected category
+                var allProducts = await _productService.GetProducts();
+                categories = await _categoryService.GetCategories();
+                suppliers = await _supplierService.GetSuppliers();
+                products = allProducts?.Where(p => p.CategoryId == categoryId) ?? Enumerable.Empty<Product>();
+            }
+            else if(supplierId.HasValue)
+            {
+                // Fetch products that match the selected supplier
+                var allProducts = await _productService.GetProducts();
+                categories = await _categoryService.GetCategories();
+                suppliers = await _supplierService.GetSuppliers();
+                products = allProducts?.Where(p => p.SupplierId == supplierId) ?? Enumerable.Empty<Product>();
             }
             else
             {
                 // Fetch all products
                 products = await _productService.GetProducts();
+                categories = await _categoryService.GetCategories();
+                suppliers = await _supplierService.GetSuppliers();
             }
+             
+            
+            
 
             // Pass the query back to the view for display in the search box
             ViewData["SearchQuery"] = query;
+            ViewBag.Categories = new SelectList(categories, "CategoryId", "Name");
+            ViewBag.Suppliers = new SelectList(suppliers, "SupplierId", "Name");
 
             }
             catch (Exception ex){

@@ -10,14 +10,36 @@
     <h1 class="page-title">Product</h1>
 
     <!-- Search Bar -->
-    <form class="d-flex" method="get" asp-action="Index" asp-controller="Product">
-        <input class="form-control me-2" type="search" name="query" placeholder="Search products..." aria-label="Search" value="@ViewData["SearchQuery"]">
-        <button class="btn btn-outline-primary" type="submit">Search</button>
-    </form>
+    <form class="row g-3 mb-3" method="get" asp-action="Index">
+        <!-- Search Bar -->
+        <div class="col-md-4">
+            <label for="query" class="form-label">Search Products</label>
+            <input type="text" class="form-control" name="query" placeholder="Enter product name..." value="@ViewData["SearchQuery"]">
+        </div>
+    <!--filtering-->
+    
+    <div class="col-auto">
+        <select class="form-control mb-2" asp-items="ViewBag.Categories" name="categoryId">
+            <option value="">All Categories</option>
+        </select>
+    </div>
+    <div class="col-auto">
+        <select class="form-control mb-2" asp-items="ViewBag.Suppliers" name="supplierId">
+            <option value="">All Suppliers</option>
+        </select>
+    </div>
+
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary mb-2">Search</button>
+    </div>
+</form>
+    <div class="col-auto"></div>
 
     <a asp-area="" class="btn btn-sm btn-primary" nasp-controller="Product" asp-action="Create"> Add Product</a>
 
 </div>
+
+
 
 
 
