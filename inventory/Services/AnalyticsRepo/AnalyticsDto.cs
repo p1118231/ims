@@ -1,4 +1,5 @@
 using inventory.Models;
+using inventory.Models.Orders;
 
 namespace inventory.Services.AnalyticsRepo
 {
@@ -26,9 +27,7 @@ namespace inventory.Services.AnalyticsRepo
         public List<decimal>? WeeklySales { get; set; }
         public List<decimal>? DailySales { get; set; }
 
-        public int LowStockCount { get; set; }
-        public int OutOfStockCount { get; set; }
-        public int OverstockCount { get; set; }
+        public List<SalesTrendDto>? SalesTrend {get;set;}
 
 
     }

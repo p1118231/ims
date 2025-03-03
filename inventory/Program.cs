@@ -26,6 +26,7 @@ using inventory.Services.NotificationsRepo;
 using inventory.Services.PriceOptimisation;
 using inventory.Services.DashboardRepo;
 using inventory.Services.AnalyticsRepo;
+using inventory.Services.ReportRepo;
 
 
 
@@ -49,6 +50,7 @@ builder.Services.AddScoped<IPricePredictionService, PricePredictionService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
+builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddHostedService<ProductCheckService>();
 
 

@@ -45,3 +45,43 @@ var ctx = document.getElementById('analyticsChart').getContext('2d');
             }
             }
         });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            fetch('/Analytics/SalesTrends')
+                .then(response => response.json())
+                .then(data => {
+                    const dates = data.map(d => d.Date);
+                    const sales = data.map(d => d.TotalSales);
+        
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: dates,
+                            datasets: [{
+                                label: 'Daily Sales',
+                                data: sales,
+                                borderColor: 'rgb(75, 192, 192)',
+                                tension: 0.1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Sales Amount ($)'
+                                    }
+                                },
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Date'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+        });

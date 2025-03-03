@@ -246,8 +246,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>lad637vlub</Fingerprint>
-      <Integrity>zRdkv/nQdVknoK30tDHLG020O9LiiVc0DNrSAz52qMM=</Integrity>
+      <Fingerprint>671lj2l6pn</Fingerprint>
+      <Integrity>UgQyF3e/oxkG2F7QJOWMi1UStkZ/L9Izo2vz6VCSRnQ=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\js\analytics.js'))</OriginalItemSpec>

@@ -1,3 +1,4 @@
+using inventory.Models;
 using inventory.Models.Orders;
 
 namespace inventory.Services.OrderRepo;
@@ -16,5 +17,8 @@ public interface IOrderService
     Task<int> GetOrderCount();
     Task<int> GetTodaySalesCount();
     Task<decimal> GetTodaySalesValue();
+
+    Task<IEnumerable<Product>> GetTopSellingProducts();
+    Task<IEnumerable<Product>> GetLowSellingProducts();
     
 }

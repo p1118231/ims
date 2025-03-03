@@ -27,5 +27,19 @@ namespace inventory.Controllers
                 return View("Error");
             }
         }
+
+        public async Task<IActionResult> SalesTrends(){
+
+            AnalyticsDto analytics = null!;
+            List<SalesTrendDto> salesTrend = new List<SalesTrendDto>();
+            try{
+                analytics = await _analyticsService.GetAnalytics();
+                salesTrend = analytics.SalesTrend ?? new List<SalesTrendDto>();
+                return Json(salesTrend);
+        }catch(Exception ex){
+            _logger.LogWarning($"failure to access analytics service : {ex.Message}");
+            return View("Error");
+        }
+        }
     }
 }

@@ -24,6 +24,9 @@ public interface IProductService{
     Task CheckAndRestockProduct();
 
     bool ProductExists(int id);
+    
+
+
 
     
 }

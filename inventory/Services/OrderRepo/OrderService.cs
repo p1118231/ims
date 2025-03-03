@@ -1,4 +1,5 @@
 using inventory.Data;
+using inventory.Models;
 using inventory.Models.Orders;
 using Microsoft.EntityFrameworkCore;
 
@@ -194,6 +195,72 @@ namespace inventory.Services.OrderRepo
                 .Where(o => o.OrderDate.Date == DateTime.Today)
                 .SumAsync(o => o.TotalPrice);
         }
+
+        public async Task<IEnumerable<Product>> GetTopSellingProducts()
+        {
+            var products = await _context.OrderItems
+            .GroupBy(oi => oi.ProductId)
+            .Select(g => new
+            {
+                ProductId = g.Key,
+                Quantity = g.Sum(oi => oi.Quantity)
+            })
+            .OrderByDescending(g => g.Quantity)
+            .Take(5)
+            .ToListAsync();
+
+            return products.Select(p => new Product
+            {
+            ProductId = p.ProductId,
+            Name = _context.Product.Find(p.ProductId)?.Name,
+            Quantity = p.Quantity
+            });
+        }
+
+        public async Task<IEnumerable<Product>> GetTopSellingProductsWithTotalQuantity()
+        {
+            var products = await _context.OrderItems
+            .GroupBy(oi => oi.ProductId)
+            .Select(g => new
+            {
+                ProductId = g.Key,
+                Quantity = g.Sum(oi => oi.Quantity)
+            })
+            .OrderByDescending(g => g.Quantity)
+            .Take(5)
+            .ToListAsync();
+
+            return products.Select(p => new Product
+            {
+            ProductId = p.ProductId,
+            Name = _context.Product.Find(p.ProductId)?.Name,
+            Quantity = p.Quantity
+            });
+        }
+        
+
+        public async Task<IEnumerable<Product>> GetLowSellingProducts()
+        {
+            var products = await _context.OrderItems
+                .GroupBy(oi => oi.ProductId)
+                .Select(g => new
+                {
+                    ProductId = g.Key,
+                    Quantity = g.Sum(oi => oi.Quantity)
+                })
+                .OrderBy(g => g.Quantity)
+                .Take(5)
+                .ToListAsync();
+
+            return products.Select(p => new Product
+            {
+                ProductId = p.ProductId,
+                Name = _context.Product.Find(p.ProductId)?.Name,
+                Quantity = p.Quantity
+            });
+        }
+
+        
 
         
     }

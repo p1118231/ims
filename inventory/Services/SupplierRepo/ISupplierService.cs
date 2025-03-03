@@ -9,4 +9,8 @@ namespace inventory.Services.SupplierRepo;
         Task<bool> AddSupplier(Supplier supplier);
         Task<bool> RemoveSupplier(Supplier supplier);
         bool SupplierExists(int id);
+
+        Task<IEnumerable<Supplier>> GetTopSuppliers();
+
+    
     }

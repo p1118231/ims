@@ -10,95 +10,24 @@
 <div class="container mt-5">
     <h1 class="display-4 text-center mb-4">Analytics Overview</h1>
 
+    
     <div class="row text-center">
         <div class="col-lg-4 mb-4">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <h5 class="card-title   ">Total Sales</h5>
-                    <p class="card-text display-6">£@Model.TotalSales.ToString("N2")</p>
-                    <p class="card-text text-secondary">Total sales value</p>
+                    <h5 class="card-title   ">Predicted Daily Sales</h5>
+                    <p class="card-text display-6">Predicted: £@Model.PredictedDailySales.ToString("N2")</p>
+                    <p class="card-text display-6">Actual: £@Model.TodaySales.ToString("N2")</p>
+                    <p class="card-text text-secondary">Predicted Daily sales</p>
                 </div>
             </div>
         </div>
         <div class="col-lg-4 mb-4">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <h5 class="card-title
-                    ">Total Stock</h5>
-                    <p class="card-text display-6">@Model.TotalProducts</p>
-                    <p class="card-text text-secondary">Total products</p>  
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title
-                    ">Total Orders</h5>
-                    <p class="card-text display-6">@Model.TotalOrders</p>
-                    <p class="card-text text-secondary">Total orders</p>  
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Total Suppliers</h5>
-                    <p class="card-text display-6">@Model.TotalSuppliers</p>
-                    <p class="card-text text-secondary">Total suppliers</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Total Categories</h5>
-                    <p class="card-text display-6">@Model.TotalCategories</p>
-                    <p class="card-text text-secondary">Total categories</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Over stock count</h5>
-                    <p class="card-text display-6">@Model.OverstockCount</p>
-                    <p class="card-text text-secondary">overstocked </p>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Low stock count</h5>
-                    <p class="card-text display-6">@Model.LowStockCount</p>
-                    <p class="card-text text-secondary">understocked</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Out of stock count</h5>
-                    <p class="card-text display-6">@Model.OutOfStockCount</p>
-                    <p class="card-text text-secondary">out of stock</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Sales Comparison (Todays Sales vs Predicted Sales)</h5>
-                    <p class="card-text display-6">£@Model.TodaySales.ToString("N2") vs £@Model.PredictedDailySales.ToString("N2")</p>
-                    <p class="card-text text-secondary">Comparison of sales</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Orders Comparison (This Week vs Predicted)</h5>
-                    <p class="card-text display-6">@Model.WeekSales vs @Model.PredictedWeeklySales</p>
+                    <h5 class="card-title   ">Predicted Weekly Sales</h5>
+                    <p class="card-text display-6">Predicted: £@Model.PredictedWeeklySales.ToString("N2")</p>
+                    <p class="card-text display-6">Actual: £@Model.WeekSales.ToString("N2")</p>
                     <p class="card-text text-secondary">Comparison of weekly sales</p>
                 </div>
             </div>
@@ -106,12 +35,24 @@
         <div class="col-lg-4 mb-4">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <h5 class="card-title">Orders Comparison (This Month vs Last Month)</h5>
-                    <p class="card-text display-6">@Model.MonthSales vs @Model.PredictedMonthlySales</p>
-                    <p class="card-text text-secondary">Comparison of Monthly</p>
+                    <h5 class="card-title   ">Predicted Monthly Sales</h5>
+                    <p class="card-text display-6">Predicted: £@Model.PredictedMonthlySales.ToString("N2")</p>
+                    <p class="card-text display-6">Actual: £@Model.MonthSales.ToString("N2")</p>
+                    <p class="card-text text-secondary">Predicted monthly sales</p>
                 </div>
             </div>
         </div>
+
+        <div class="col-lg-12 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Sales Trend</h5>
+                    <canvas id="salesChart"></canvas>
+                    <p class="card-text text-secondary">Overview of sales trend over the past period</p>
+                </div>
+            </div>
+        </div>
+    
         <div class="col-lg-12 mb-4">
             <div class="card shadow-sm">
                 <div class="card-body">
@@ -122,6 +63,7 @@
                 </div>
             </div>
         </div>
+        
         <div class="col-lg-12 mb-4">
             <div class="card shadow-sm">
                 <div class="card-body">

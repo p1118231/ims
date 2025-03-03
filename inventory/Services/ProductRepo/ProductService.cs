@@ -103,5 +103,7 @@ namespace inventory.Services.ProductRepo
         {
             return await _context.Product.CountAsync();
         }
+
+        
     }
 }

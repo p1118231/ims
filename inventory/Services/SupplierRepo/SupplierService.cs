@@ -43,5 +43,9 @@ namespace inventory.Services.SupplierRepo;
         public bool SupplierExists(int id){
             return _context.Suppliers.Any(e => e.SupplierId == id);
         }
+
+        public async Task<IEnumerable<Supplier>> GetTopSuppliers(){
+            return await _context.Suppliers.OrderByDescending(s => s.Products.Count).Take(5).ToListAsync();
+        }
     }
 

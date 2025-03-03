@@ -4,6 +4,8 @@ using inventory.Services.ProductRepo;
 using inventory.Services.SalesPrediction;
 using inventory.Services.SupplierRepo;
 
+
+
 namespace inventory.Services.AnalyticsRepo;
 
 public class AnalyticsService:IAnalyticsService{
@@ -53,9 +55,8 @@ public class AnalyticsService:IAnalyticsService{
         MonthlySales = orders.GroupBy(o => o.OrderDate.Month).Select(g => g.Sum(o => o.TotalPrice)).ToList(),
         WeeklySales = orders.GroupBy(o => o.OrderDate.DayOfWeek).Select(g => g.Sum(o => o.TotalPrice)).ToList(),
         DailySales = orders.GroupBy(o => o.OrderDate.Date).Select(g => g.Sum(o => o.TotalPrice)).ToList(),
-        LowStockCount = products.Count(p => p.Quantity < 5),
-        OutOfStockCount = products.Count(p => p.Quantity == 0),
-        OverstockCount = products.Count(p => p.Quantity > 200)
+        SalesTrend = orders.GroupBy(o => o.OrderDate.Date).OrderBy(g => g.Key).Select(g => new SalesTrendDto { Date = g.Key.ToString("yyyy-MM-dd"), TotalSales = g.Sum(o => o.TotalPrice) }).ToList()
+        
 
     };
 
