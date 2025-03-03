@@ -14,18 +14,32 @@ public class OrderController:Controller{
         _logger = logger;
     }   
 
-    public async Task<IActionResult> Index(string? query){
+    public async Task<IActionResult> Index(string? query, DateTime? startDate, DateTime? endDate){
         
         IEnumerable<Order> orders = null!;
         try{
+            var allOrders = await _orderService.GetOrders();
             if (!string.IsNullOrEmpty(query)){
-                var allOrders = await _orderService.GetOrders();
                 orders = allOrders?.Where(o => o.Id.ToString().Contains(query, StringComparison.OrdinalIgnoreCase)) ?? Enumerable.Empty<Order>();
             }
             else{
-                orders = await _orderService.GetOrders();
+                orders = allOrders;
             }
+
+            // Filter orders based on order date range
+            if (startDate.HasValue && endDate.HasValue){
+                orders = orders.Where(o => o.OrderDate.Date >= startDate.Value.Date && o.OrderDate.Date <= endDate.Value.Date);
+            }
+            else if (startDate.HasValue){
+                orders = orders.Where(o => o.OrderDate.Date >= startDate.Value.Date);
+            }
+            else if (endDate.HasValue){
+                orders = orders.Where(o => o.OrderDate.Date <= endDate.Value.Date);
+            }
+
             ViewData["SearchQuery"] = query;
+            ViewData["StartDate"] = startDate?.ToString("yyyy-MM-dd");
+            ViewData["EndDate"] = endDate?.ToString("yyyy-MM-dd");
         }
         catch (Exception ex){
             _logger.LogWarning($"failure to access order service : {ex.Message}");
@@ -33,7 +47,6 @@ public class OrderController:Controller{
         }
         Console.WriteLine(orders);
         return View(orders);
-        
     }
 
     public async Task<IActionResult> Details(int? id){

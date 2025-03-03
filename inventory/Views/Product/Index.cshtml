@@ -10,6 +10,7 @@
     <h1 class="page-title">Product</h1>
 
     <!-- Search Bar -->
+    <div class="col-md-4"></div>
     <form class="row g-3 mb-3" method="get" asp-action="Index">
         <!-- Search Bar -->
         <div class="col-md-4">
@@ -31,6 +32,7 @@
 
     <div class="col-auto">
         <button type="submit" class="btn btn-primary mb-2">Search</button>
+        <a href="@Url.Action("Index", new { query = "", categoryId = "", supplierId = "" })" class="btn btn-secondary mb-2">Clear</a>
     </div>
 </form>
     <div class="col-auto"></div>

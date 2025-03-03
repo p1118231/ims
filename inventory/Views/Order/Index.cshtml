@@ -11,6 +11,16 @@
         <input class="form-control me-2" type="search" name="query" placeholder="Search order id..." aria-label="Search" value="@ViewData["SearchQuery"]">
         <button class="btn btn-outline-primary" type="submit">Search</button>
     </form>
+    <!-- Clear Filter Button -->
+    <form class="d-flex mb-3" method="get" asp-action="Index" asp-controller="Order">
+        <button class="btn btn-outline-secondary" type="submit">Clear Filter</button>
+    </form>
+ <!-- Date Filter -->
+    <form class="d-flex mb-3" method="get" asp-action="Index" asp-controller="Order">
+        <input class="form-control me-2" type="date" name="startDate" placeholder="Start Date" aria-label="Start Date" value="@ViewData["StartDate"]">
+        <input class="form-control me-2" type="date" name="endDate" placeholder="End Date" aria-label="End Date" value="@ViewData["EndDate"]">
+        <button class="btn btn-outline-primary" type="submit">Filter</button>
+    </form>
 
 <table class="table">
     <thead>
