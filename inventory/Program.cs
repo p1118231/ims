@@ -27,6 +27,7 @@ using inventory.Services.PriceOptimisation;
 using inventory.Services.DashboardRepo;
 using inventory.Services.AnalyticsRepo;
 using inventory.Services.ReportRepo;
+using inventory.Services.StockOptimisationRepo;
 
 
 
@@ -51,6 +52,7 @@ builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<IStockOptimisationService, StockOptimisationService>();
 builder.Services.AddHostedService<ProductCheckService>();
 
 
@@ -64,6 +66,7 @@ builder.Services.AddHttpClient();
 builder.Services.AddDbContext<ProductContext>(options =>
 {
     
+    /*
    if (builder.Environment.IsDevelopment())
     {
         var folder = Environment.SpecialFolder.LocalApplicationData;
@@ -74,7 +77,7 @@ builder.Services.AddDbContext<ProductContext>(options =>
         options.EnableSensitiveDataLogging();
     }
     else
-    {
+    {*/
          var cs = builder.Configuration.GetConnectionString("ProductContext");
         options.UseSqlServer(cs, sqlServerOptionsAction: sqlOptions =>
             sqlOptions.EnableRetryOnFailure(
@@ -83,7 +86,7 @@ builder.Services.AddDbContext<ProductContext>(options =>
                 errorNumbersToAdd: null
             )
         );
-   }
+  // }
 });
 
 // Add session services

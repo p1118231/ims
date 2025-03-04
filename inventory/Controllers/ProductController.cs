@@ -9,6 +9,7 @@ using inventory.Services.SupplierRepo;
 using inventory.Services.PriceOptimisation;
 using inventory.Services.NotificationRepo;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using inventory.Services.StockOptimisationRepo;
 
 
 namespace inventory.Controllers;
@@ -25,8 +26,9 @@ public class ProductController : Controller
 
     private readonly IPricePredictionService _pricePredictionService;
     private readonly INotificationService _notificationService;
+    private readonly IStockOptimisationService _stockOptimisationService;
 
-    public ProductController(ILogger<ProductController> logger, IProductService productService, ICategoryService categoryService, ISupplierService supplierService, IPricePredictionService pricePredictionService, INotificationService notificationService)
+    public ProductController(ILogger<ProductController> logger, IProductService productService, ICategoryService categoryService, ISupplierService supplierService, IPricePredictionService pricePredictionService, INotificationService notificationService, IStockOptimisationService stockOptimisationService)
     {
         _logger = logger;
         _productService = productService;
@@ -34,6 +36,8 @@ public class ProductController : Controller
         _supplierService = supplierService;
         _pricePredictionService = pricePredictionService;
         _notificationService = notificationService;
+        _stockOptimisationService = stockOptimisationService;
+        
     }
     
     
@@ -153,6 +157,9 @@ public class ProductController : Controller
              //get the predicted price for the product
              var predictedPrice = await _pricePredictionService.PredictPriceAsync(id??0);
              ViewBag.PredictedPrice = predictedPrice?.predicted_price ?? 0;
+
+             var predictedStock = await _stockOptimisationService.PredictStockLevelAsync(id??0);
+             ViewBag.PredictedStock = predictedStock?.predicted_stock_level ?? 0;
 
             if (product == null)
             {

@@ -32,6 +32,7 @@ public class NotificationService : INotificationService
 
         public async Task CreateNotificationAsync(Notification notification)
         {
+            
             _context.Notifications.Add(notification);
             await _context.SaveChangesAsync();
         }
