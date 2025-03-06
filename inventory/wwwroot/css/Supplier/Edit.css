@@ -1,0 +1,140 @@
+/* General Styles */
+.edit-supplier-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #F5F2E9; /* Soft Beige */
+    font-family: 'Arial', sans-serif;
+    border-radius: 12px;
+}
+
+/* Title */
+.edit-title {
+    font-size: 28px;
+    color: #333333; /* Black */
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #E6F0FA; /* Light Blue */
+    padding-bottom: 10px;
+}
+
+/* Form Section */
+.form-section.card {
+    background-color: #FFFFFF; /* White */
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    border: 1px solid #E6F0FA;
+}
+
+.edit-form {
+    width: 100%;
+}
+
+/* Form Group */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    font-size: 14px;
+    color: #333333;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #E6F0FA; /* Light Blue */
+    border-radius: 8px;
+    font-size: 14px;
+    color: #333333;
+    background-color: #FFFFFF;
+    transition: border-color 0.3s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #D1E3F6;
+    box-shadow: 0 0 5px rgba(230, 240, 250, 0.5);
+}
+
+/* Validation Errors */
+.text-danger {
+    font-size: 12px;
+    color: #DC3545;
+    margin-top: 5px;
+    display: block;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-save {
+    background-color: #E6F0FA; /* Light Blue */
+    color: #333333;
+}
+
+.btn-save:hover {
+    background-color: #D1E3F6;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.btn-back {
+    background-color: #FFFFFF;
+    color: #333333;
+    border: 1px solid #E6F0FA;
+}
+
+.btn-back:hover {
+    background-color: #F5F2E9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .edit-title {
+        font-size: 24px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 576px) {
+    .edit-supplier-container {
+        margin: 20px;
+        padding: 15px;
+    }
+
+    .form-section.card {
+        padding: 20px;
+    }
+
+    .form-input {
+        font-size: 12px;
+    }
+
+    .btn {
+        padding: 8px 15px;
+        font-size: 12px;
+    }
+}

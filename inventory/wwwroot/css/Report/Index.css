@@ -1,0 +1,125 @@
+/* General Styles */
+.report-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #F5F2E9; /* Soft Beige */
+    font-family: 'Arial', sans-serif;
+    border-radius: 12px;
+}
+
+/* Title */
+.report-title {
+    font-size: 28px;
+    color: #333333; /* Black */
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #E6F0FA; /* Light Blue */
+    padding-bottom: 10px;
+}
+
+/* Report Section */
+.report-section.card {
+    background-color: #FFFFFF; /* White */
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    border: 1px solid #E6F0FA;
+}
+
+.card-header {
+    background-color: #E6F0FA; /* Light Blue */
+    color: #333333;
+    font-size: 18px;
+    font-weight: 500;
+    padding: 15px 20px;
+    border-radius: 12px 12px 0 0;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+/* Report List */
+.report-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.report-list dt {
+    font-weight: 600;
+    color: #333333;
+    font-size: 16px;
+}
+
+.report-list dd {
+    color: #666666;
+    font-size: 16px;
+    margin: 0;
+}
+
+/* Subheader */
+.subheader {
+    font-size: 16px;
+    color: #333333;
+    margin: 20px 0 10px;
+    font-weight: 600;
+}
+
+/* Unordered List */
+.report-ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.report-ul li {
+    padding: 10px 0;
+    color: #666666;
+    font-size: 14px;
+    border-bottom: 1px solid #E6F0FA;
+}
+
+.report-ul li:last-child {
+    border-bottom: none;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .report-title {
+        font-size: 24px;
+    }
+
+    .report-list {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .subheader {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 576px) {
+    .report-container {
+        margin: 20px;
+        padding: 15px;
+    }
+
+    .report-section.card {
+        padding: 15px;
+    }
+
+    .card-header {
+        font-size: 16px;
+    }
+
+    .report-list dt, .report-list dd {
+        font-size: 14px;
+    }
+
+    .report-ul li {
+        font-size: 12px;
+    }
+}

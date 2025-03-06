@@ -1,63 +1,53 @@
 @using inventory.Models
 @model IEnumerable<Notification>
-@using Microsoft.AspNetCore.Mvc.Rendering
-
-@{
-    Layout = "_Layout";
-}
 
 @{
     ViewData["Title"] = "Notifications";
     var unreadCount = Model.Count(n => !n.IsRead);
 }
 
-<body>
-    
+<head>
+    <link rel="stylesheet" href="~/css/Notifications/Index.css" asp-append-version="true" />
+</head>
 
+<div class="notifications-container">
+    <h1 class="notifications-title">Notifications (@unreadCount unread)</h1>
 
-<h2>Notifications (@unreadCount unread)</h2>
+    <div class="notifications-section card">
+        <div class="card-header">Notification List</div>
+        <div class="card-body">
+            <table class="notifications-table">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.Message)</th>
+                        <th>@Html.DisplayNameFor(model => model.Date)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="@(item.IsRead ? "" : "unread-row")">
+                            <td>@Html.DisplayFor(modelItem => item.Message)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Date)</td>
+                            <td>
+                                <div class="notification-actions">
+                                    <form method="post" asp-action="MarkAsRead" asp-controller="Notifications" asp-route-id="@item.NotificationId" class="action-form">
+                                        <button type="submit" class="btn btn-mark-read">Mark as Read</button>
+                                    </form>
+                                    <form method="post" asp-action="Delete" asp-controller="Notifications" asp-route-id="@item.NotificationId" class="action-form">
+                                        <button type="submit" class="btn btn-delete">Delete</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
-<table class="table">
-    <thead>
-        <tr>
-            
-            <th>
-                @Html.DisplayNameFor(model => model.Message)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Date)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-    @foreach (var item in Model) {
-        <tr class="@(item.IsRead ? "" : "table-warning")">
-            
-            <td>
-                @Html.DisplayFor(modelItem => item.Message)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                <div class="notification-item @(item.IsRead ? "read" : "unread")">
-                    
-                    <div class="notification-actions">
-                     <form method="post" asp-action="MarkAsRead" asp-controller="Notifications" asp-route-id="@item.NotificationId">
-                    <button type="submit" class="btn btn-success">Mark as Read</button>
-                </form>
-                <form method="post" asp-action="Delete" asp-controller="Notifications" asp-route-id="@item.NotificationId">
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
-                </div>
-            </div>
-        </td>
-        </tr>
-         }
-     </tbody>
-</table>
-
-<script src="~/js/site.js" asp-append-version="true"></script>
-
-</body>
+@section Scripts {
+    <script src="~/js/site.js" asp-append-version="true"></script>
+}

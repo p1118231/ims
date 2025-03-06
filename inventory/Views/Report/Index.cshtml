@@ -4,54 +4,81 @@
     ViewData["Title"] = "Report";
 }
 
-<h1>Report</h1>
+<head>
+    <link rel="stylesheet" href="~/css/Report/Index.css" asp-append-version="true"/>
+</head>
 
-<div>
-    <h2>Sales Report</h2>
-    <p>Today's Sales Count: @Model.TodaySalesCount</p>
-    <p>Today's Sales Value: @Model.TodaySalesValue</p>
-    <p>This Week's Sales Count: @Model.WeekSalesCount</p>
-    <p>This Week's Sales Value: @Model.WeekSalesValue</p>
-    <p>This Month's Sales Count: @Model.MonthSalesCount</p>
-    <p>This Month's Sales Value: @Model.MonthSalesValue</p>
-</div>
+<div class="report-container">
+    <h1 class="report-title">Report Overview</h1>
 
-<div>
-    <h2>Inventory Levels</h2>
-    <p>Total Products: @Model.TotalProducts</p>
-    <p>Total Suppliers: @Model.TotalSuppliers</p>
-    <p>Total Categories: @Model.TotalCategories</p>
-    <p>Total Orders: @Model.TotalOrders</p>
-    <p>Total Sales: @Model.TotalSales</p>
-</div>
+    <div class="report-section card">
+        <div class="card-header">Sales Report</div>
+        <div class="card-body">
+            <dl class="report-list">
+                <dt>Today's Sales Count</dt>
+                <dd>@Model.TodaySalesCount</dd>
+                <dt>Today's Sales Value</dt>
+                <dd>£@Model.TodaySalesValue.ToString("N2")</dd>
+                <dt>This Week's Sales Count</dt>
+                <dd>@Model.WeekSalesCount</dd>
+                <dt>This Week's Sales Value</dt>
+                <dd>£@Model.WeekSalesValue.ToString("N2")</dd>
+                <dt>This Month's Sales Count</dt>
+                <dd>@Model.MonthSalesCount</dd>
+                <dt>This Month's Sales Value</dt>
+                <dd>£@Model.MonthSalesValue.ToString("N2")</dd>
+            </dl>
+        </div>
+    </div>
 
-<div>
-    <h2>Performance </h2>
-<h3>Top Selling Products</h3>
-<ul>
-    @foreach (var product in Model.TopSellingProducts)
-    {
-        <li>@product.Name - </li>
-    }
-</ul>
+    <div class="report-section card">
+        <div class="card-header">Inventory Levels</div>
+        <div class="card-body">
+            <dl class="report-list">
+                <dt>Total Products</dt>
+                <dd>@Model.TotalProducts</dd>
+                <dt>Total Suppliers</dt>
+                <dd>@Model.TotalSuppliers</dd>
+                <dt>Total Categories</dt>
+                <dd>@Model.TotalCategories</dd>
+                <dt>Total Orders</dt>
+                <dd>@Model.TotalOrders</dd>
+                <dt>Total Sales</dt>
+                <dd>£@Model.TotalSales.ToString("N2")</dd>
+            </dl>
+        </div>
+    </div>
 
-<h3>Least Selling Products</h3>
-<ul>
-    @foreach (var product in Model.LowSellingProducts)
-    {
-        <li>@product.Name - 
-            
-        </li>
-    }
-</ul>
-</div>
+    <div class="report-section card">
+        <div class="card-header">Performance</div>
+        <div class="card-body">
+            <h3 class="subheader">Top Selling Products</h3>
+            <ul class="report-ul">
+                @foreach (var product in Model.TopSellingProducts)
+                {
+                    <li>@product.Name</li>
+                }
+            </ul>
+            <h3 class="subheader">Least Selling Products</h3>
+            <ul class="report-ul">
+                @foreach (var product in Model.LowSellingProducts)
+                {
+                    <li>@product.Name</li>
+                }
+            </ul>
+        </div>
+    </div>
 
-<div>
-    <h2>Supplier performance</h2>
-    <ul>
-        @foreach (var supplier in Model.TopSuppliers)
-        {
-            <li>@supplier.Name</li>
-        }
-    </ul>
+    <div class="report-section card">
+        <div class="card-header">Supplier Performance</div>
+        <div class="card-body">
+            <h3 class="subheader">Top Suppliers</h3>
+            <ul class="report-ul">
+                @foreach (var supplier in Model.TopSuppliers)
+                {
+                    <li>@supplier.Name</li>
+                }
+            </ul>
+        </div>
+    </div>
 </div>

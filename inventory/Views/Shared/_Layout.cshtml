@@ -9,86 +9,83 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/IMSMVC.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-    <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
+    <!-- Custom Layout CSS -->
+    <link rel="stylesheet" href="~/css/layout.css" asp-append-version="true" />
 </head>
 <body>
+    <div class="main-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header text-center">
+                <img src="~/images/ims_transparent-.png" alt="IMS" class="logo" />
+                <h2 class="sidebar-title">IMS</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a asp-controller="Home" asp-action="Index"><i class="bi bi-house-door"></i> Dashboard</a></li>
+                <li><a asp-controller="Product" asp-action="Index"><i class="bi bi-box"></i> Products</a></li>
+                <li><a asp-controller="Order" asp-action="Index"><i class="bi bi-cart"></i> Orders</a></li>
+                <li><a asp-controller="Analytics" asp-action="Index"><i class="bi bi-graph-up"></i> Analytics</a></li>
+                <li><a asp-controller="Supplier" asp-action="Index"><i class="bi bi-person-circle"></i> Suppliers</a></li>
+                <li><a asp-controller="Report" asp-action="Index"><i class="bi bi-gear"></i> Report</a></li>
+                <li><a asp-controller="Account" asp-action="Logout" class="logout"><i class="bi bi-box-arrow-right"></i> Sign Out</a></li>
+            </ul>
+        </nav>
 
-<div class="main-container">
-    
-    <!-- Sidebar -->
-    <nav class="sidebar">
-        <div class="sidebar-header text-center">
-            <img src="~/images/ims_transparent-.png" alt="IMS" class="logo">
+        <!-- Main Content -->
+        <div class="content">
+            <main role="main">
+                @RenderBody()
+            </main>
         </div>
-        <ul class="nav-links">
-            <li><a asp-controller="Home" asp-action="Index"><i class="bi bi-house-door"></i> Dashboard</a></li>
-            <li><a asp-controller="Product" asp-action="Index"><i class="bi bi-box"></i> Products</a></li>
-            <li><a asp-controller="Order" asp-action="Index"><i class="bi bi-cart"></i> Orders</a></li>
-            <li><a asp-controller="Analytics" asp-action="Index"><i class="bi bi-graph-up"></i> Analytics</a></li>
-            <li><a asp-controller="Supplier" asp-action="Index"><i class="bi bi-person-circle"></i> Suppliers</a></li>
-            <li><a asp-controller="Report" asp-action="Index"><i class="bi bi-gear"></i> Report</a></li>
-            <li><a asp-controller="Account" asp-action="Logout" class="logout"><i class="bi bi-box-arrow-right"></i> Sign Out</a></li>
-        </ul>
-    </nav>
 
-    <!-- Main Content -->
-    <div class="content">
-        <main role="main">
-            @RenderBody()
-        </main>
+        <!-- Right Panel -->
+        <aside class="right-panel">
+            <!-- Notifications -->
+            <div class="panel-section card">
+                <div class="card-header">Notifications</div>
+                <div class="card-body">
+                    <a href="@Url.Action("Index", "Notifications")" class="btn btn-notify">
+                        Notifications <span id="notificationCount" class="badge bg-danger">0</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Terms and Conditions -->
+            <div class="panel-section card">
+                <div class="card-header">Terms and Conditions</div>
+                <div class="card-body">
+                    <p>View our terms.</p>
+                    <a href="@Url.Action("Index", "Policy")" class="btn btn-action">Policy</a>
+                </div>
+            </div>
+
+            <!-- Website Link -->
+            <div class="panel-section card">
+                <div class="card-header">Website</div>
+                <div class="card-body">
+                    <p>Visit our website for more information.</p>
+                    <a href="https://www.example.com" target="_blank" class="btn btn-action">Go to Website</a>
+                </div>
+            </div>
+
+            <!-- Support -->
+            <div class="panel-section card">
+                <div class="card-header">Support</div>
+                <div class="card-body">
+                    <p>Contact our support team for help.</p>
+                    <button onclick="window.location.href='mailto:support@example.com';" class="btn btn-action">Contact Support</button>
+                </div>
+            </div>
+        </aside>
     </div>
 
-    <!-- Right Panel -->
-    <aside class="right-panel">
-        
-        <!-- Notifications -->
-        <div class="notifications">
-            <a href="@Url.Action("Index", "Notifications")" class="btn btn-outline-secondary">
-                Notifications <span id="notificationCount" class="badge bg-danger">0</span>
-            </a>
-        </div>
-
-       
-        <!-- Inventory Health -->
-        <div class="card">
-            <div class="card-header">Terms and Conditions</div>
-            <div class="card-body">
-                <p>View our terms.</p>
-                <a href="@Url.Action("Index", "Policy")" class="btn btn-primary">Policy</a>
-            </div>
-        </div>
-
-        <!-- Website Link -->
-        <div class="card">
-            <div class="card-header">Website</div>
-            <div class="card-body">
-                <p>Visit our website for more information.</p>
-                <a href="https://www.example.com" target="_blank" class="btn btn-primary">Go to Website</a>
-            </div>
-        </div>
-
-        <!-- Support -->
-        <div class="card">
-            <div class="card-header">Support</div>
-            <div class="card-body">
-                <p>If you need help, please contact our support team.</p>
-                <button onclick="window.location.href='mailto:support@example.com';" class="btn btn-primary">Contact Support</button>
-            </div>
-        </div>
-
-    </aside>
-</div>
-
-<!-- Scripts -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
-
-@await RenderSectionAsync("Scripts", required: false)
-
+    <!-- Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -1,0 +1,155 @@
+/* General Styles */
+.notifications-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #F5F2E9; /* Soft Beige */
+    font-family: 'Arial', sans-serif;
+    border-radius: 12px;
+}
+
+/* Title */
+.notifications-title {
+    font-size: 28px;
+    color: #333333; /* Black */
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #E6F0FA; /* Light Blue */
+    padding-bottom: 10px;
+}
+
+/* Notifications Section */
+.notifications-section.card {
+    background-color: #FFFFFF; /* White */
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid #E6F0FA;
+}
+
+.card-header {
+    background-color: #E6F0FA; /* Light Blue */
+    color: #333333;
+    font-size: 18px;
+    font-weight: 500;
+    padding: 15px 20px;
+    border-radius: 12px 12px 0 0;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+/* Notifications Table */
+.notifications-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.notifications-table th, .notifications-table td {
+    padding: 15px;
+    text-align: left;
+    color: #333333;
+}
+
+.notifications-table th {
+    background-color: #E6F0FA; /* Light Blue */
+    font-weight: 600;
+    font-size: 16px;
+    border-bottom: 2px solid #D1E3F6;
+}
+
+.notifications-table td {
+    font-size: 14px;
+    border-bottom: 1px solid #E6F0FA;
+}
+
+.notifications-table tr:last-child td {
+    border-bottom: none;
+}
+
+.notifications-table tr.unread-row {
+    background-color: #FFF3E0; /* Light Orange for unread */
+}
+
+.notifications-table tr:hover {
+    background-color: #F5F2E9; /* Soft Beige */
+    transition: background 0.3s ease;
+}
+
+/* Notification Actions */
+.notification-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.action-form {
+    display: inline;
+}
+
+.btn {
+    padding: 8px 15px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-mark-read {
+    background-color: #E6F0FA; /* Light Blue */
+    color: #333333;
+}
+
+.btn-mark-read:hover {
+    background-color: #D1E3F6;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.btn-delete {
+    background-color: #DC3545; /* Red */
+    color: #FFFFFF;
+}
+
+.btn-delete:hover {
+    background-color: #C82333;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .notifications-title {
+        font-size: 24px;
+    }
+
+    .notifications-table th, .notifications-table td {
+        padding: 10px;
+    }
+
+    .notification-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 576px) {
+    .notifications-container {
+        margin: 20px;
+        padding: 15px;
+    }
+
+    .notifications-section.card {
+        padding: 15px;
+    }
+
+    .notifications-table th, .notifications-table td {
+        font-size: 12px;
+    }
+
+    .btn {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+}

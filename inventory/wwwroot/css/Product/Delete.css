@@ -1,0 +1,132 @@
+/* General Styles */
+.delete-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #F5F2E9; /* Soft Beige */
+    font-family: 'Arial', sans-serif;
+}
+
+/* Titles */
+.delete-title {
+    font-size: 28px;
+    color: #333333; /* Black */
+    margin-bottom: 20px;
+    text-align: center;
+    border-bottom: 2px solid #E6F0FA; /* Light Blue */
+    padding-bottom: 10px;
+}
+
+.delete-subtitle {
+    font-size: 20px;
+    color: #666666;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* Card Styles */
+.delete-details.card {
+    background-color: #FFFFFF; /* White */
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+    font-size: 22px;
+    color: #333333;
+    margin-bottom: 20px;
+}
+
+.divider {
+    border-color: #E6F0FA; /* Light Blue */
+    margin: 20px 0;
+}
+
+/* Details List */
+.details-list {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 15px;
+}
+
+.detail-label {
+    font-weight: bold;
+    color: #333333;
+    font-size: 16px;
+}
+
+.detail-value {
+    color: #666666;
+    font-size: 16px;
+    word-break: break-word;
+}
+
+/* Form Actions */
+.delete-form {
+    margin-top: 30px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.btn {
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.btn-delete {
+    background-color: #DC3545; /* Red for delete */
+    color: #FFFFFF;
+}
+
+.btn-delete:hover {
+    background-color: #C82333;
+}
+
+.btn-cancel {
+    background-color: #FFFFFF;
+    color: #333333;
+    border: 1px solid #E6F0FA; /* Light Blue */
+}
+
+.btn-cancel:hover {
+    background-color: #F5F2E9; /* Soft Beige */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 576px) {
+    .delete-container {
+        margin: 20px;
+        padding: 15px;
+    }
+
+    .delete-details.card {
+        padding: 20px;
+    }
+
+    .delete-title {
+        font-size: 24px;
+    }
+
+    .delete-subtitle {
+        font-size: 18px;
+    }
+
+    .details-list {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
