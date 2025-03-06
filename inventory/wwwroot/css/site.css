@@ -1,0 +1,153 @@
+/* General Styles */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f8f9fa;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Prevents scrolling on body */
+}
+
+/* Layout */
+.main-container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background: linear-gradient(180deg, #DDEBF7, #F4ECE6);
+  padding: 20px;
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  overflow: hidden; /* Ensures sidebar does not scroll */
+}
+
+.sidebar-header {
+  padding-bottom: 20px;
+}
+
+.logo {
+  max-width: 100%;
+  height: 60px;
+}
+
+.nav-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-links li {
+  padding: 10px 0;
+}
+
+.nav-links a {
+  display: flex;
+  align-items: center;
+  color: #000;
+  font-size: 16px;
+  text-decoration: none;
+  transition: all 0.3s ease-in-out;
+  border-left: 3px solid transparent;
+  padding: 10px;
+}
+
+.nav-links a i {
+  margin-right: 10px;
+}
+
+.nav-links a:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-left: 3px solid #000;
+}
+
+.logout {
+  color: red !important;
+  font-weight: bold;
+}
+
+/* Main Content */
+.content {
+  flex-grow: 1;
+  padding: 20px;
+  background: #ffffff;
+  margin-left: 250px;
+  margin-right: 300px;
+  overflow-y: auto; /* Enables scrolling only for main content */
+  height: 100vh;
+}
+
+/* Right Panel */
+.right-panel {
+  width: 300px;
+  background: #ffffff;
+  padding: 20px;
+  box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  overflow: hidden; /* Ensures right panel does not scroll */
+}
+
+/* Cards */
+.card {
+  border-radius: 10px;
+  border: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+}
+
+.card-header {
+  background: #DDEBF7;
+  font-weight: bold;
+  border-radius: 10px 10px 0 0;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: #2c3e50;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #000;
+}
+
+.btn-secondary {
+  background-color: #b0b0b0;
+  border: none;
+}
+
+.btn-outline-secondary {
+  border-color: #2c3e50;
+  color: #2c3e50;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #2c3e50;
+  color: #fff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sidebar {
+      width: 200px;
+  }
+
+  .content {
+      margin-left: 200px;
+      margin-right: 0;
+  }
+
+  .right-panel {
+      display: none; /* Hide right panel on small screens */
+  }
+}

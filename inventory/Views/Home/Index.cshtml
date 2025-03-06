@@ -1,0 +1,75 @@
+@model inventory.Services.DashboardRepo.HomeViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h1>Dashboard</h1>
+
+<div class="container mt-5">
+    <h1 class="display-4 text-center mb-4">Dashboard Overview</h1>
+
+    <div class="row text-center">
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Inventory Count</h5>
+                    <p class="card-text display-6">@Model.inventoryCount</p>
+                    <p class="card-text text-secondary">Total products in inventory</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Today's Sales Count</h5>
+                    <p class="card-text display-6">@Model.todaySalesCount</p>
+                    <p class="card-text text-secondary">Number of sales today</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Today's Sales Value</h5>
+                    <p class="card-text display-6">£@Model.todaySalesValue.ToString("N2")</p>
+                    <p class="card-text text-secondary">Total value of today's sales</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    Low Stock Products
+                </div>
+                <ul class="list-group list-group-flush">
+                    @foreach(var product in Model.lowStockProducts)
+                    {
+                        <li class="list-group-item">
+                            @product.Name - @product.Quantity left
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-success text-white">
+                    Recent Orders
+                </div>
+                <ul class="list-group list-group-flush">
+                    @foreach(var order in Model.recentOrders)
+                    {
+                        <li class="list-group-item">
+                            Order #@order.Id - @order.OrderDate.ToString("dd/MM/yyyy")
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+

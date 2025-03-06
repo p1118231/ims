@@ -1,0 +1,57 @@
+@model inventory.Services.ReportRepo.ReportDto
+
+@{
+    ViewData["Title"] = "Report";
+}
+
+<h1>Report</h1>
+
+<div>
+    <h2>Sales Report</h2>
+    <p>Today's Sales Count: @Model.TodaySalesCount</p>
+    <p>Today's Sales Value: @Model.TodaySalesValue</p>
+    <p>This Week's Sales Count: @Model.WeekSalesCount</p>
+    <p>This Week's Sales Value: @Model.WeekSalesValue</p>
+    <p>This Month's Sales Count: @Model.MonthSalesCount</p>
+    <p>This Month's Sales Value: @Model.MonthSalesValue</p>
+</div>
+
+<div>
+    <h2>Inventory Levels</h2>
+    <p>Total Products: @Model.TotalProducts</p>
+    <p>Total Suppliers: @Model.TotalSuppliers</p>
+    <p>Total Categories: @Model.TotalCategories</p>
+    <p>Total Orders: @Model.TotalOrders</p>
+    <p>Total Sales: @Model.TotalSales</p>
+</div>
+
+<div>
+    <h2>Performance </h2>
+<h3>Top Selling Products</h3>
+<ul>
+    @foreach (var product in Model.TopSellingProducts)
+    {
+        <li>@product.Name - </li>
+    }
+</ul>
+
+<h3>Least Selling Products</h3>
+<ul>
+    @foreach (var product in Model.LowSellingProducts)
+    {
+        <li>@product.Name - 
+            
+        </li>
+    }
+</ul>
+</div>
+
+<div>
+    <h2>Supplier performance</h2>
+    <ul>
+        @foreach (var supplier in Model.TopSuppliers)
+        {
+            <li>@supplier.Name</li>
+        }
+    </ul>
+</div>

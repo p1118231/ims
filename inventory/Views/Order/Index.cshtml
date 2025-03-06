@@ -1,0 +1,80 @@
+@model IEnumerable<inventory.Models.Orders.Order>
+
+@{
+    ViewData["Title"] = "Order Index";
+}
+
+<h1>Orders</h1>
+
+ <!-- Search Bar -->
+    <form class="d-flex" method="get" asp-action="Index" asp-controller="Order">
+        <input class="form-control me-2" type="search" name="query" placeholder="Search order id..." aria-label="Search" value="@ViewData["SearchQuery"]">
+        <button class="btn btn-outline-primary" type="submit">Search</button>
+    </form>
+    <!-- Clear Filter Button -->
+    <form class="d-flex mb-3" method="get" asp-action="Index" asp-controller="Order">
+        <button class="btn btn-outline-secondary" type="submit">Clear Filter</button>
+    </form>
+ <!-- Date Filter -->
+    <form class="d-flex mb-3" method="get" asp-action="Index" asp-controller="Order">
+        <input class="form-control me-2" type="date" name="startDate" placeholder="Start Date" aria-label="Start Date" value="@ViewData["StartDate"]">
+        <input class="form-control me-2" type="date" name="endDate" placeholder="End Date" aria-label="End Date" value="@ViewData["EndDate"]">
+        <button class="btn btn-outline-primary" type="submit">Filter</button>
+    </form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Date</th>
+            <th>Items Count</th>
+            <th>Total Amount</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var order in Model)
+    {
+        <tr>
+            <td>@order.Id</td>
+            <td>@order.OrderDate.ToShortDateString()</td>
+            <td>@(order.OrderItems?.Count ?? 0)</td>
+            <td>@(order.OrderItems?.Sum(item => item.Price * item.Quantity) ?? 0)</td>
+            <td>
+                <a asp-action="Details" asp-route-id="@order.Id" class="btn btn-primary">Inspect</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@section Scripts {
+    <canvas id="ordersChart" width="400" height="150"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('ordersChart').getContext('2d');
+        var ordersChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Select(order => order.OrderDate.ToShortDateString()))),
+                datasets: [{
+                    label: 'Total Sales per Day',
+                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.GroupBy(order => order.OrderDate.Date)
+                                    .Select(group => new { Date = group.Key, Total = group.Sum(order => order.OrderItems?.Sum(item => item.Price * item.Quantity) ?? 0) })
+                                    .OrderBy(x => x.Date)
+                                    .Select(x => x.Total))),
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+}

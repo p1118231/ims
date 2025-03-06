@@ -1,0 +1,90 @@
+/* Page Title */
+.page-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #2c3e50; /* Dark Black */
+}
+
+/* Search & Filter Form */
+.search-filter-form {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.search-filter-form .form-label {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.search-filter-form .form-control {
+    border-radius: 6px;
+    border: 1px solid #ddd;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: #2c3e50;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #000;
+}
+
+.btn-secondary {
+    background-color: #b0b0b0;
+    border: none;
+}
+
+.btn-secondary:hover {
+    background-color: #6c757d;
+}
+
+/* Table */
+.table {
+    margin-top: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table th {
+    background-color: #DDEBF7; /* Light Blue */
+    color: #2c3e50;
+    padding: 12px;
+    text-align: left;
+    border: none;
+}
+
+.table td {
+    padding: 10px;
+    border: none;
+}
+
+.table tbody tr:hover {
+    background-color: #f4ece6; /* Soft Beige */
+}
+
+/* Stock Styling */
+.text-danger {
+    font-weight: bold;
+    color: red !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .search-filter-form .row {
+        flex-direction: column;
+    }
+
+    .search-filter-form .col-md-2 {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
