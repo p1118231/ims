@@ -2,15 +2,8 @@
 
 @{
     ViewData["Title"] = $"Edit {ViewBag.FieldToEdit}";
+    Layout = "_Layout"; // Ensure it uses the shared layout
 }
-
-<head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="~/IMSMVC.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/Product/EditField.css" asp-append-version="true" />
-    <script src="~/js/Product/EditField.js" asp-append-version="true"></script>
-</head>
 
 <div class="edit-container">
     <h1 class="edit-title">Edit @ViewBag.FieldToEdit for @Model.Name</h1>
@@ -18,17 +11,23 @@
     <form asp-action="EditField" method="post" onsubmit="return confirmAndSave();" class="edit-form">
         <input type="hidden" name="id" value="@Model.ProductId" />
         <input type="hidden" name="field" value="@ViewBag.FieldToEdit" />
-        <input type="hidden" id="newValue" name="newValue" />
 
         @if (ViewBag.FieldToEdit?.ToLower() == "supplier")
         {
             <div class="form-group">
                 <label for="SupplierId" class="form-label">Select New Supplier:</label>
-                <select class="form-select" id="SupplierId" name="newValue" onchange="selectValue(this.value, this.options[this.selectedIndex].text)">
+                <select class="form-select" id="SupplierId" name="newValue" required>
                     <option value="">Select Supplier</option>
                     @foreach (var supplier in ViewBag.Suppliers as List<Supplier>)
                     {
-                        <option value="@supplier.SupplierId">@supplier.Name</option>
+                        @if (supplier.Name == ViewBag.FieldValue)
+                        {
+                            <option value="@supplier.SupplierId" selected>@supplier.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@supplier.SupplierId">@supplier.Name</option>
+                        }
                     }
                 </select>
             </div>
@@ -39,8 +38,9 @@
                 <label for="category-dropdown" class="form-label">Select New Category:</label>
                 <div class="dropdown">
                     <button class="btn btn-dropdown dropdown-toggle" type="button" id="category-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        Select Category
+                        @(ViewBag.FieldValue ?? "Select Category")
                     </button>
+                    <input type="hidden" id="newValue" name="newValue" value="@(ViewBag.FieldValue != null ? (ViewBag.Categories as List<Category>)?.FirstOrDefault(c => c.Name == ViewBag.FieldValue)?.CategoryId : "")" />
                     <ul class="dropdown-menu" aria-labelledby="category-dropdown">
                         @foreach (var category in ViewBag.Categories as List<Category>)
                         {
@@ -58,21 +58,21 @@
         {
             <div class="form-group">
                 <label for="newValue" class="form-label">New Quantity:</label>
-                <input type="number" name="newValue" id="newValue" class="form-input" min="1" required/>
+                <input type="number" name="newValue" id="newValue" class="form-input" value="@(ViewBag.FieldValue ?? Model.Quantity)" min="1" required />
             </div>
         }
         else if (ViewBag.FieldToEdit?.ToLower() == "restock")
         {
             <div class="form-group">
-                <label for="restockAmount" class="form-label">Restock Amount:</label>
-                <input type="number" name="restockAmount" id="restockAmount" class="form-input" min="1" required/>
+                <label for="newValue" class="form-label">Restock Amount:</label>
+                <input type="number" name="newValue" id="newValue" class="form-input" value="@ViewBag.FieldValue" min="1" required />
             </div>
         }
         else
         {
             <div class="form-group">
                 <label for="newValue" class="form-label">New @ViewBag.FieldToEdit:</label>
-                <input type="text" name="newValue" id="newValue" class="form-input" value="@ViewBag.FieldValue" required/>
+                <input type="text" name="newValue" id="newValue" class="form-input" value="@ViewBag.FieldValue" required />
             </div>
         }
 
@@ -87,7 +87,7 @@
         <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="d-flex">
                 <div class="toast-body">
-                    <span id="toastMessage">Changes have been saved successfully!</span>
+                    <span id="toastMessage">@TempData["SuccessMessage"]</span>
                 </div>
                 <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
@@ -95,36 +95,37 @@
     </div>
 </div>
 
-<script>
-    function selectValue(id, name) {
-        document.getElementById("newValue").value = id;
-        const dropdownButton = document.querySelector(".dropdown-toggle");
-        dropdownButton.textContent = name;
-    }
-
-    function showToast(message) {
-        document.getElementById('toastMessage').textContent = message;
-        const toastElement = document.getElementById('successToast');
-        const toast = new bootstrap.Toast(toastElement);
-        toast.show();
-    }
-
-    function confirmAndSave() {
-        let fieldToEdit = "@ViewBag.FieldToEdit".toLowerCase();
-        let confirmationMessage = fieldToEdit === "restock" 
-            ? "Are you sure you want to place a restock order?" 
-            : "Are you sure you want to save the changes?";
-
-        const isConfirmed = confirm(confirmationMessage);
-        
-        if (isConfirmed) {
-            let toastMessage = fieldToEdit === "restock" 
-                ? "Order made to supplier!" 
-                : "Changes have been saved successfully!";
-                
-            showToast(toastMessage);
-            return true;
+@section Scripts {
+    <script>
+        function selectValue(id, name) {
+            document.getElementById("newValue").value = id;
+            const dropdownButton = document.querySelector(".dropdown-toggle");
+            dropdownButton.textContent = name;
         }
-        return false;
-    }
-</script>
+
+        function showToast(message) {
+            document.getElementById('toastMessage').textContent = message;
+            const toastElement = document.getElementById('successToast');
+            const toast = new bootstrap.Toast(toastElement);
+            toast.show();
+        }
+
+        function confirmAndSave() {
+            let fieldToEdit = "@ViewBag.FieldToEdit".toLowerCase();
+            let confirmationMessage = fieldToEdit === "restock" 
+                ? "Are you sure you want to place a restock order?" 
+                : "Are you sure you want to save the changes?";
+            return confirm(confirmationMessage);
+        }
+
+        // Show toast if TempData has a success message (after redirect)
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <text>
+            document.addEventListener("DOMContentLoaded", function() {
+                showToast("@TempData["SuccessMessage"]");
+            });
+            </text>
+        }
+    </script>
+}

@@ -149,16 +149,19 @@ public class ProductController : Controller
                 return NotFound();
             }
             Product? product = null;
+            dynamic predictedPrice = 0.0;
+            dynamic predictedStock = 0.0;
+
 
             try{
 
              product = await _productService.GetProductByIdAsync(id);
 
              //get the predicted price for the product
-             var predictedPrice = await _pricePredictionService.PredictPriceAsync(id??0);
+              predictedPrice = await _pricePredictionService.PredictPriceAsync(id??0);
              ViewBag.PredictedPrice = predictedPrice?.predicted_price ?? 0;
 
-             var predictedStock = await _stockOptimisationService.PredictStockLevelAsync(id??0);
+              predictedStock = await _stockOptimisationService.PredictStockLevelAsync(id??0);
              ViewBag.PredictedStock = predictedStock?.predicted_stock_level ?? 0;
 
             if (product == null)
@@ -176,116 +179,132 @@ public class ProductController : Controller
             
         }
 
-         //add edit field for the product entities
-            public async Task<IActionResult> EditField(int id, string field)
+         //add edit field for the product entities// GET: Product/EditField/5?field=quantity
+    public async Task<IActionResult> EditField(int id, string field)
+    {
+        try
+        {
+            var product = await _productService.GetProductByIdAsync(id);
+            if (product == null)
             {
-
-                try{
-                    var product = await _productService.GetProductByIdAsync(id);
-
-                    if (product == null)
-                    {
-                        return NotFound();
-                    }
-
-                    // Fetch dropdown data for suppliers and categories
-                    if (field.ToLower() == "supplier" || field.ToLower() == "category")
-                    {
-                        ViewBag.Categories =await _categoryService.GetCategories();
-                        ViewBag.Suppliers = await _supplierService.GetSuppliers();
-                    }
-
-                    ViewBag.FieldToEdit = field;
-
-                    ViewBag.FieldValue = field.ToLower() switch
-                    {
-                        "description" => (object)(product.Description ?? ""),
-                        "supplier" => (object)(product.Supplier?.Name ?? ""),
-                        "category" => (object)(product.Category?.Name ?? ""),
-                        "quantity" => (object)product.Quantity,
-                        "price" => (object)product.Price,
-                        "image" => (object)(product.ImageUrl ?? ""),
-                        _ => null
-                    };
-
-                    return View(product);
-                }
-                catch{
-                    _logger.LogWarning("failure to get product details");
-                    return StatusCode(500, "Internal server error");
-                }
-               
-
-               
+                return NotFound();
             }
 
-            [HttpPost]
-            public async Task<IActionResult> EditField(int id, string field, string newValue, int? restockAmount)
+            // Fetch dropdown data for suppliers and categories
+            if (field.ToLower() == "supplier" || field.ToLower() == "category")
             {
-                var product = await _productService.GetProductByIdAsync(id);
-
-                if (product == null)
-                {
-                    return NotFound();
-                }
-
-
-                if (string.IsNullOrEmpty(newValue))
-                {
-                    ModelState.AddModelError("", "The new value cannot be empty.");
-                    ViewBag.FieldToEdit = field; // Ensure FieldToEdit is set
-                    ViewBag.Categories =await _categoryService.GetCategories();
-                    ViewBag.Suppliers = await _supplierService.GetSuppliers();
-                    return View(product);
-                }
-
-                switch (field.ToLower())
-                {
-                    case "description":
-                        product.Description = newValue;
-                        break;
-                    case "supplier":
-                        product.SupplierId = int.Parse(newValue); 
-                        break;
-                    case "category":
-                        product.CategoryId = int.Parse(newValue); 
-                        break;
-                    case "price":
-                        product.Price = decimal.Parse(newValue);
-                        break;
-                    case "quantity":
-                        product.Quantity = int.Parse(newValue);
-                        break;
-                    case "restock":
-                        if (restockAmount.HasValue && restockAmount.Value > 0)
-                        {
-                            product.Quantity += restockAmount.Value; // Add restock amount to existing quantity
-                        }
-                        else
-                        {
-                            ModelState.AddModelError("", "Restock amount must be greater than zero.");
-                            return View(product);
-                        }
-                        break;
-                    case "image":
-                        product.ImageUrl = newValue;
-                        break;
-                    default:
-                        return BadRequest("Invalid field");
-                }
-
-                await _productService.UpdateProduct(product);
-                await _productService.SaveChangesAsync();
-                await _notificationService.CreateNotificationAsync(new Notification
-                {
-                    Date = DateTime.Now,
-                    Message = $"Product {product.Name} has been updated"
-                });
-
-                TempData["SuccessMessage"] = "Changes have been saved successfully!";
-
-                return RedirectToAction("Details", new { id });
+                ViewBag.Categories = await _categoryService.GetCategories();
+                ViewBag.Suppliers = await _supplierService.GetSuppliers();
             }
+
+            ViewBag.FieldToEdit = field;
+            ViewBag.FieldValue = field.ToLower() switch
+            {
+                "description" => product.Description ?? "",
+                "supplier" => product.Supplier?.Name ?? "",
+                "category" => product.Category?.Name ?? "",
+                "quantity" => product.Quantity.ToString(),
+                "price" => product.Price.ToString(),
+                "image" => product.ImageUrl ?? "",
+                "restock" => "", // No initial value for restock
+                _ => null
+            };
+
+            return View(product);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failure to get product details for ID {Id}", id);
+            return StatusCode(500, "Internal server error");
+        }
+    }
+
+    // POST: Product/EditField
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EditField(int id, string field, string newValue)
+    {
+        var product = await _productService.GetProductByIdAsync(id);
+        if (product == null)
+        {
+            return NotFound();
+        }
+
+        if (string.IsNullOrEmpty(newValue))
+        {
+            ModelState.AddModelError("", "The new value cannot be empty.");
+            ViewBag.FieldToEdit = field;
+            ViewBag.FieldValue = newValue; // Retain submitted value on error
+            if (field.ToLower() == "supplier" || field.ToLower() == "category")
+            {
+                ViewBag.Categories = await _categoryService.GetCategories();
+                ViewBag.Suppliers = await _supplierService.GetSuppliers();
+            }
+            return View(product);
+        }
+
+        try
+        {
+            switch (field.ToLower())
+            {
+                case "description":
+                    product.Description = newValue;
+                    break;
+                case "supplier":
+                    product.SupplierId = int.Parse(newValue);
+                    break;
+                case "category":
+                    product.CategoryId = int.Parse(newValue);
+                    break;
+                case "price":
+                    product.Price = decimal.Parse(newValue);
+                    break;
+                case "quantity":
+                    product.Quantity = int.Parse(newValue);
+                    break;
+                case "restock":
+                    int restockValue = int.Parse(newValue);
+                    if (restockValue <= 0)
+                    {
+                        ModelState.AddModelError("", "Restock amount must be greater than zero.");
+                        ViewBag.FieldToEdit = field;
+                        ViewBag.FieldValue = newValue; // Retain submitted value
+                        return View(product);
+                    }
+                    product.Quantity += restockValue;
+                    break;
+                case "image":
+                    product.ImageUrl = newValue;
+                    break;
+                default:
+                    return BadRequest("Invalid field");
+            }
+
+            await _productService.UpdateProduct(product);
+            await _productService.SaveChangesAsync();
+            await _notificationService.CreateNotificationAsync(new Notification
+            {
+                Date = DateTime.Now,
+                Message = $"Product {product.Name} has been updated"
+            });
+
+            TempData["SuccessMessage"] = "Changes have been saved successfully!";
+            return RedirectToAction("Details", new { id });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error saving changes for product {Id}", id);
+            ModelState.AddModelError("", "An error occurred while saving changes.");
+            ViewBag.FieldToEdit = field;
+            ViewBag.FieldValue = newValue; // Retain submitted value on error
+            if (field.ToLower() == "supplier" || field.ToLower() == "category")
+            {
+                ViewBag.Categories = await _categoryService.GetCategories();
+                ViewBag.Suppliers = await _supplierService.GetSuppliers();
+            }
+            return View(product);
+        }
+    }
 
     
         // GET: Product/Delete/5
