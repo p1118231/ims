@@ -4,6 +4,7 @@
 @{
     ViewData["Title"] = "Notifications";
     var unreadCount = Model.Count(n => !n.IsRead);
+    Layout = "_Layout";
 }
 
 <head>

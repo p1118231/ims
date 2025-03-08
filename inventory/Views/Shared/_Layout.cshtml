@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@inject inventory.Services.NotificationRepo.INotificationService NotificationService
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -46,8 +47,11 @@
             <div class="panel-section card">
                 <div class="card-header">Notifications</div>
                 <div class="card-body">
+                    @{
+                        var unreadCount = NotificationService.GetAllUnreadNotificationCountAsync(); // Fetch unread count
+                    }
                     <a href="@Url.Action("Index", "Notifications")" class="btn btn-notify">
-                        Notifications <span id="notificationCount" class="badge bg-danger">0</span>
+                        Notifications <span id="notificationCount" class="badge bg-danger">@unreadCount.Result</span>
                     </a>
                 </div>
             </div>
