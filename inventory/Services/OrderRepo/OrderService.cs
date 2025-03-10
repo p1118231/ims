@@ -1,6 +1,8 @@
 using inventory.Data;
 using inventory.Models;
 using inventory.Models.Orders;
+using inventory.Services.AnalyticsRepo;
+using inventory.Services.AnalyticsResp;
 using Microsoft.EntityFrameworkCore;
 
 namespace inventory.Services.OrderRepo
@@ -260,8 +262,133 @@ namespace inventory.Services.OrderRepo
             });
         }
 
-        
+        public async Task<decimal> GetWeekSalesValue()
+        {
+            return await _context.Orders
+                .Where(o => o.OrderDate.Date >= DateTime.Today.AddDays(-7))
+                .SumAsync(o => o.TotalPrice);
+        }
 
-        
+        public async Task<decimal> GetMonthSalesValue()
+        {
+            return await _context.Orders
+                .Where(o => o.OrderDate.Date >= DateTime.Today.AddMonths(-1))
+                .SumAsync(o => o.TotalPrice);
+        }
+
+       
+
+        public async Task<List<SalesTrendDto>> GetSalesTrend()
+    {
+        try
+        {
+            var trends = await _context.Orders
+                .GroupBy(o => o.OrderDate.Date)
+                .OrderBy(g => g.Key)
+                .Select(g => new SalesTrendDto
+                {
+                    Date = g.Key.ToString("yyyy-MM-dd"),
+                    TotalSales = g.Sum(o => o.TotalPrice)
+                })
+                .ToListAsync();
+
+            if (!trends.Any())
+            {
+                _logger.LogInformation("No sales trend data found in Orders table");
+            }
+            return trends;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to retrieve sales trend data");
+            return new List<SalesTrendDto>();
+        }
+    }
+
+        public async Task<List<decimal>> GetMonthlySalesList()
+        {
+            try{
+            return await _context.Orders
+                .GroupBy(o => o.OrderDate.Month)
+                .Select(g => g.Sum(o => o.TotalPrice))
+                .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to retrieve monthly sales data");
+                return new List<decimal>();
+            }
+        }
+
+        public async Task<List<decimal>> GetWeeklySalesList()
+        {
+            try{
+            var orders = await _context.Orders
+                .Select(o => new { o.OrderDate, o.TotalPrice })
+                .ToListAsync(); // Fetch data into memory
+
+            return orders
+                .GroupBy(o => o.OrderDate.DayOfWeek)
+                .OrderBy(g => g.Key) // Optional: Sort by DayOfWeek enum (Sunday to Saturday)
+                .Select(g => g.Sum(o => o.TotalPrice))
+                .ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to retrieve weekly sales data");
+                return new List<decimal>();
+            }
+        }
+
+        public async Task<List<decimal>> GetDailySalesList()
+        {
+            try{
+            return await _context.Orders
+                .GroupBy(o => o.OrderDate.Date)
+                .Select(g => g.Sum(o => o.TotalPrice))
+                .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to retrieve daily sales data");
+                return new List<decimal>();
+            }
+        }
+
+        public async Task<List<CategorySalesDto>> GetCategorySales()
+{
+    try
+    {
+        var categorySales = await _context.Orders
+            .Join(_context.OrderItems, o => o.Id, oi => oi.OrderId, (o, oi) => new { o, oi })
+            .Join(_context.Product, oi => oi.oi.ProductId, p => p.ProductId, (oi, p) => new { oi.o.TotalPrice, p.CategoryId })
+            .GroupBy(x => (int?)(x.CategoryId) ?? 0) // 0 for null categories
+            .Select(g => new
+            {
+                CategoryId = g.Key,
+                Sales = g.Sum(x => x.TotalPrice)
+            })
+            .Join(_context.Categories, 
+                  cs => cs.CategoryId, 
+                  c => c.CategoryId, 
+                  (cs, c) => new CategorySalesDto
+                  {
+                      Category = c != null ? c.Name : "Unknown",
+                      Sales = cs.Sales
+                  })
+            .ToListAsync();
+
+        if (!categorySales.Any())
+        {
+            _logger.LogInformation("No category sales data found");
+        }
+        return categorySales;
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, "Failed to retrieve category sales data");
+        return new List<CategorySalesDto>();
+    }
+}
     }
 }

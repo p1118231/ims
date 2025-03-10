@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace inventory.Controllers
 {
+    [Route("api/[controller]")]
     public class AnalyticsController : Controller
     {
         private readonly ILogger<AnalyticsController> _logger;
@@ -28,6 +29,7 @@ namespace inventory.Controllers
             }
         }
 
+        [HttpGet("salestrends")]
         public async Task<IActionResult> SalesTrends(){
 
             AnalyticsDto analytics = null!;

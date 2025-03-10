@@ -14,36 +14,46 @@
     <link rel="stylesheet" href="~/css/Account/SignIn.css" asp-append-version="true" />
 </head>
 <body>
-    <div class="signin-container">
-        <header class="signin-header text-center">
-            <img src="~/images/ims_transparent-.png" alt="IMS Logo" class="signin-logo" />
-            <h1 class="signin-title">Welcome to IMS</h1>
-            <p class="signin-subtitle">Your AI-powered solution for smarter inventory management</p>
-        </header>
-
-        <main class="signin-body">
-            <p class="signin-intro">Harness the power of artificial intelligence to:</p>
-            <ul class="signin-features list-unstyled">
-                <li><i class="bi bi-bar-chart-line"></i> <strong>Predict Demand:</strong> Use AI-driven analytics to forecast stock needs and avoid overstocking or shortages.</li>
-                <li><i class="bi bi-boxes"></i> <strong>Optimize Inventory:</strong> AI ensures optimal stock levels, minimizing costs while maximizing availability.</li>
-                <li><i class="bi bi-arrow-repeat"></i> <strong>Automate Reordering:</strong> Smart algorithms automatically generate reorder suggestions based on usage trends.</li>
-                <li><i class="bi bi-graph-up-arrow"></i> <strong>Identify Trends:</strong> Spot fast-moving items and slow sellers with AI-powered insights.</li>
-                <li><i class="bi bi-person-lines-fill"></i> <strong>Streamline Operations:</strong> AI simplifies managing supplier relationships and order histories.</li>
-                <li><i class="bi bi-file-earmark-bar-graph"></i> <strong>Analyze Performance:</strong> Get detailed, AI-enhanced reports for better decision-making and growth.</li>
-            </ul>
-        </main>
-
-        <div class="signin-actions text-center">
-            <a class="btn btn-primary btn-signin" asp-action="Login">
-                <i class="bi bi-box-arrow-in-right me-2"></i> Sign In or Login
-            </a>
+    <div class="signin-wrapper">
+        <!-- Left Section: Branding and Features -->
+        <div class="signin-left">
+            <div class="signin-left-content">
+                <img src="~/images/ims_transparent-.png" alt="IMS Logo" class="signin-logo img-fluid" />
+                <h1 class="signin-title">Welcome to IMS</h1>
+                <p class="signin-subtitle">Your AI-powered solution for smarter inventory management</p>
+                <ul class="signin-features list-unstyled mt-4">
+                    <li><i class="bi bi-bar-chart-line me-2"></i> Predict demand with AI analytics</li>
+                    <li><i class="bi bi-boxes me-2"></i> Optimize inventory levels</li>
+                    <li><i class="bi bi-arrow-repeat me-2"></i> Automate reordering</li>
+                    <li><i class="bi bi-graph-up-arrow me-2"></i> Identify trends instantly</li>
+                </ul>
+            </div>
         </div>
 
-        <footer class="signin-footer text-center">
-            <p class="mb-1">Need help? <a href="/help" class="footer-link">Contact Support</a></p>
-            <p class="mb-0">© 2024 Inventory Management System. All rights reserved.</p>
-        </footer>
+        <!-- Right Section: Sign-In Form -->
+        <div class="signin-right">
+            <div class="signin-form-container">
+                <h2 class="signin-form-title">Sign In</h2>
+                <p class="signin-form-subtitle">Access your inventory dashboard</p>
+                <form asp-action="Login" method="post" class="signin-form">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required />
+                    </div>
+                    <div class="mb-4">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required />
+                    </div>
+                    <button type="submit" class="btn btn-signin w-100">Sign In <i class="bi bi-arrow-right ms-2"></i></button>
+                </form>
+                <p class="signin-help mt-3">Need help? <a href="/help" class="footer-link">Contact Support</a></p>
+            </div>
+        </div>
     </div>
+
+    <footer class="signin-footer text-center">
+        <p class="mb-0">© 2024 Inventory Management System. All rights reserved.</p>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

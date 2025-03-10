@@ -3,6 +3,7 @@ using inventory.Models;
 using inventory.Services.DashboardRepo;
 using inventory.Services.NotificationRepo;
 using inventory.Services.SalesPrediction;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace inventory.Controllers
@@ -25,6 +26,7 @@ namespace inventory.Controllers
             _dashboardService = dashboardService;
         }
 
+        //[Authorize]
         [HttpGet]
         public async Task<ActionResult> Index()
         {

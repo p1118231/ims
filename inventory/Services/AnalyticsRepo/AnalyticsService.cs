@@ -46,19 +46,21 @@ public class AnalyticsService:IAnalyticsService{
         PredictedMonthlySales = forecast.monthly_sales,
         TotalSuppliers = suppliers.Count(),
         TotalCategories = categories.Count(),
-        TodaySales = orders.Where(o => o.OrderDate.Date == DateTime.Today.Date).Sum(o => o.TotalPrice),
-        WeekSales = orders.Where(o => o.OrderDate.Date >= DateTime.Today.Date.AddDays(-7)).Sum(o => o.TotalPrice),
-        MonthSales = orders.Where(o => o.OrderDate.Date >= DateTime.Today.Date.AddMonths(-1)).Sum(o => o.TotalPrice),
         TotalSales = orders.Sum(o => o.TotalPrice),
         Days = new List<string> { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" },
         Months = new List<string> { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" },
-        MonthlySales = orders.GroupBy(o => o.OrderDate.Month).Select(g => g.Sum(o => o.TotalPrice)).ToList(),
-        WeeklySales = orders.GroupBy(o => o.OrderDate.DayOfWeek).Select(g => g.Sum(o => o.TotalPrice)).ToList(),
-        DailySales = orders.GroupBy(o => o.OrderDate.Date).Select(g => g.Sum(o => o.TotalPrice)).ToList(),
-        SalesTrend = orders.GroupBy(o => o.OrderDate.Date).OrderBy(g => g.Key).Select(g => new SalesTrendDto { Date = g.Key.ToString("yyyy-MM-dd"), TotalSales = g.Sum(o => o.TotalPrice) }).ToList()
-        
+      
 
     };
+    analyticsDto.TodaySales= await _orderService.GetTodaySalesValue();
+    analyticsDto.WeekSales= await _orderService.GetWeekSalesValue();
+    analyticsDto.MonthSales= await _orderService.GetMonthSalesValue();
+    analyticsDto.MonthlySales = await _orderService.GetMonthlySalesList();
+    analyticsDto.WeeklySales = await _orderService.GetWeeklySalesList();
+    analyticsDto.DailySales = await _orderService.GetDailySalesList();
+    analyticsDto.SalesTrend = await _orderService.GetSalesTrend();
+    analyticsDto.CategorySales = await _orderService.GetCategorySales();
+
 
     return analyticsDto;
     }

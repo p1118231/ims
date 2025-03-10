@@ -1,5 +1,7 @@
 using inventory.Models;
 using inventory.Models.Orders;
+using inventory.Services.AnalyticsRepo;
+using inventory.Services.AnalyticsResp;
 
 namespace inventory.Services.OrderRepo;
 
@@ -18,7 +20,17 @@ public interface IOrderService
     Task<int> GetTodaySalesCount();
     Task<decimal> GetTodaySalesValue();
 
+    Task<decimal> GetWeekSalesValue();
+    Task<decimal> GetMonthSalesValue();
+
+    Task<List<decimal>> GetMonthlySalesList();
+    Task<List<decimal>> GetWeeklySalesList();
+    Task<List<decimal>> GetDailySalesList();
+
     Task<IEnumerable<Product>> GetTopSellingProducts();
     Task<IEnumerable<Product>> GetLowSellingProducts();
+
+    Task<List<SalesTrendDto>> GetSalesTrend();
+    Task<List<CategorySalesDto>> GetCategorySales();
     
 }

@@ -102,7 +102,12 @@ builder.Services.AddDbContext<ProductContext>(options =>
     options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
 })
-.AddCookie()
+.AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+{
+    options.LoginPath = "/Account/SignIn";
+    options.LogoutPath = "/Account/Logout";
+})
+
 .AddOpenIdConnect("Auth0", options =>
 {
     options.Authority = $"https://{builder.Configuration["Auth0:Domain"]}";
@@ -127,7 +132,7 @@ builder.Services.AddDbContext<ProductContext>(options =>
         OnRedirectToIdentityProviderForSignOut = context =>
         {
             var logoutUri = $"https://{builder.Configuration["Auth0:Domain"]}/v2/logout?client_id={builder.Configuration["Auth0:ClientId"]}";
-            context.Response.Redirect(logoutUri);
+            context.Response.Redirect("/Account/SignIn");
             context.HandleResponse();
 
             return Task.CompletedTask;

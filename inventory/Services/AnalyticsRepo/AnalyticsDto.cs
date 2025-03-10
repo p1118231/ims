@@ -1,5 +1,6 @@
 using inventory.Models;
 using inventory.Models.Orders;
+using inventory.Services.AnalyticsResp;
 
 namespace inventory.Services.AnalyticsRepo
 {
@@ -28,6 +29,7 @@ namespace inventory.Services.AnalyticsRepo
         public List<decimal>? DailySales { get; set; }
 
         public List<SalesTrendDto>? SalesTrend {get;set;}
+        public List<CategorySalesDto>? CategorySales { get; set; }
 
 
     }

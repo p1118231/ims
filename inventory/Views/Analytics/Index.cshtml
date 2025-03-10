@@ -1,3 +1,5 @@
+@using inventory.Services.AnalyticsRepo
+@using inventory.Services.AnalyticsResp
 @model inventory.Services.AnalyticsRepo.AnalyticsDto
 
 @{
@@ -60,6 +62,13 @@
                 <p class="card-subtitle">Daily sales over the week</p>
             </div>
         </div>
+        <div class="chart-card card">
+            <div class="card-header">Sales by Category</div>
+            <div class="card-body">
+                <canvas id="categorySalesChart" height="300"></canvas>
+                <p class="card-subtitle">Distribution of sales by product category</p>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -70,6 +79,8 @@
         var monthlySales = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MonthlySales));
         var days = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Days));
         var dailySales = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DailySales));
+        var salesTrend = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.SalesTrend ?? new List<SalesTrendDto>()));
+        var categorySales = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.CategorySales ?? new List<CategorySalesDto>()));
     </script>
     <script src="~/js/analytics.js"></script>
 }

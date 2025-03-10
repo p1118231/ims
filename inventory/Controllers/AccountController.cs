@@ -21,12 +21,19 @@ public class AccountController : Controller
         return Challenge(authenticationProperties, "Auth0");
     }
 
-    public IActionResult Logout()
+    public async Task<IActionResult> Logout()
     {
-        return SignOut(new AuthenticationProperties
+        // Sign out from the cookie authentication scheme
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+        // Sign out from Auth0 (if using OpenID Connect)
+        await HttpContext.SignOutAsync("Auth0", new AuthenticationProperties
         {
-            RedirectUri = Url.Action("SignIn", "Account")
-        }, CookieAuthenticationDefaults.AuthenticationScheme, "Auth0");
+            RedirectUri = Url.Action("SignIn", "Account", null, Request.Scheme) // Ensure full URL
+        });
+
+        // Explicitly redirect to SignIn after sign-out
+        return RedirectToAction("SignIn", "Account");
     }
 
     public IActionResult SignIn()
