@@ -12,306 +12,456 @@ namespace inventory.Services.OrderRepo
         private readonly ILogger<OrderService> _logger;
         private readonly ProductContext _context;
 
-         public OrderService(ILogger<OrderService> logger, ProductContext context)
+        public OrderService(ILogger<OrderService> logger, ProductContext context)
         {
             _logger = logger;
             _context = context;
         }
 
+        // Save changes to the database
         public async Task<bool> SaveChangesAsync()
         {
-            
-            await _context.SaveChangesAsync();
-            return true;
+            try
+            {
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to save changes");
+                return false;
+            }
         }
 
+        // Update an existing order
         public async Task<bool> UpdateOrder(Order order)
         {
-          
-            _context.Entry(order).State = EntityState.Modified;
-            await SaveChangesAsync();
-            return true;
+            try
+            {
+                _context.Entry(order).State = EntityState.Modified;
+                await SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to update order");
+                return false;
+            }
         }
 
-
+        // Remove an order
         public async Task<bool> RemoveOrder(Order order)
         {
-            _context.Orders.Remove(order);
-            await SaveChangesAsync();
-            return true;
+            try
+            {
+                _context.Orders.Remove(order);
+                await SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to remove order");
+                return false;
+            }
         }
 
+        // Check if an order exists by ID
         public async Task<bool> OrderExists(int orderId)
         {
-            return await _context.Orders.AnyAsync(e => e.Id == orderId);
+            try
+            {
+                return await _context.Orders.AnyAsync(e => e.Id == orderId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to check if order exists");
+                return false;
+            }
         }
-    
+
+        // Get an order by ID
         public async Task<OrderViewModel?> GetOrderByIdAsync(int? orderId)
         {
-            var order = await _context.Orders
-                .Include(o => o.OrderItems!)
-                .ThenInclude(oi => oi.Product!)
-                .FirstOrDefaultAsync(o => o.Id == orderId);
-
-            if (order == null)
+            try
             {
-                _logger.LogError($"Order with id {orderId} not found");
+                var order = await _context.Orders
+                    .Include(o => o.OrderItems!)
+                    .ThenInclude(oi => oi.Product!)
+                    .FirstOrDefaultAsync(o => o.Id == orderId);
+
+                if (order == null)
+                {
+                    _logger.LogError($"Order with id {orderId} not found");
+                    return null;
+                }
+
+                return new OrderViewModel
+                {
+                    OrderId = order.Id,
+                    OrderDate = order.OrderDate,
+                    Items = order.OrderItems?.Select(oi => new OrderItemViewModel
+                    {
+                        OrderItemId = oi.Id,
+                        OrderId = oi.OrderId,
+                        ProductId = oi.ProductId,
+                        ProductName = oi.Product?.Name,
+                        Quantity = oi.Quantity,
+                        Price = oi.Product?.Price ?? 0
+                    }).ToList()
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get order by ID");
                 return null;
             }
-
-            return new OrderViewModel
-            {
-                OrderId = order.Id,
-                OrderDate = order.OrderDate,
-                Items = order.OrderItems?.Select(oi => new OrderItemViewModel
-                {
-                    OrderItemId = oi.Id,
-                    OrderId = oi.OrderId,
-                    ProductId = oi.ProductId,
-                    ProductName = oi.Product?.Name,
-                    Quantity = oi.Quantity,
-                    Price = oi.Product?.Price ?? 0
-                }).ToList()
-            };
         }
 
+        // Get all orders
         public async Task<IEnumerable<Order>> GetOrders()
         {
-            var orders = await _context.Orders
-                .Include(o => o.OrderItems!)
-                .ThenInclude(oi => oi.Product)
-                .ToListAsync();
-
-            return orders.Select(o => new Order
+            try
             {
-                Id = o.Id,
-                OrderDate = o.OrderDate,
-                OrderItems = o.OrderItems?.Select(oi => new OrderItem
+                var orders = await _context.Orders
+                    .Include(o => o.OrderItems!)
+                    .ThenInclude(oi => oi.Product)
+                    .ToListAsync();
+
+                return orders.Select(o => new Order
                 {
-                    Id = oi.Id,
-                    ProductId = oi.ProductId,
-                    OrderId = oi.OrderId,
-                    Product = oi.Product,
-                    Quantity = oi.Quantity,
-                    Price = oi.Price
-                }).ToList()
-            });
+                    Id = o.Id,
+                    OrderDate = o.OrderDate,
+                    OrderItems = o.OrderItems?.Select(oi => new OrderItem
+                    {
+                        Id = oi.Id,
+                        ProductId = oi.ProductId,
+                        OrderId = oi.OrderId,
+                        Product = oi.Product,
+                        Quantity = oi.Quantity,
+                        Price = oi.Price
+                    }).ToList()
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get orders");
+                return new List<Order>();
+            }
         }
 
+        // Add a new order
         public async Task<bool> AddOrder(OrderViewModel orderViewModel)
         {
-            var order = new Order
+            try
             {
-                OrderDate = orderViewModel.OrderDate,
-                OrderItems = orderViewModel.Items?.Select(oi => new OrderItem
+                var order = new Order
                 {
-                    ProductId = oi.ProductId,
-                    Quantity = oi.Quantity,
-                    Price = oi.Price
-                }).ToList()
-            };
+                    OrderDate = orderViewModel.OrderDate,
+                    OrderItems = orderViewModel.Items?.Select(oi => new OrderItem
+                    {
+                        ProductId = oi.ProductId,
+                        Quantity = oi.Quantity,
+                        Price = oi.Price
+                    }).ToList()
+                };
 
-            _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
-            return true;
+                _context.Orders.Add(order);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to add order");
+                return false;
+            }
         }
 
+        // Update an existing order using OrderViewModel
         public async Task<bool> UpdateOrder(OrderViewModel orderViewModel)
         {
-            var order = await _context.Orders
-                .Include(o => o.OrderItems)
-                .FirstOrDefaultAsync(o => o.Id == orderViewModel.OrderId);
-
-            if (order == null)
+            try
             {
-                _logger.LogError($"Order with id {orderViewModel.OrderId} not found");
-                return false;
-            }
+                var order = await _context.Orders
+                    .Include(o => o.OrderItems)
+                    .FirstOrDefaultAsync(o => o.Id == orderViewModel.OrderId);
 
-            order.OrderDate = orderViewModel.OrderDate;
-
-            if (order.OrderItems == null)
-            {
-                _logger.LogError($"Order with id {orderViewModel.OrderId} has no order items");
-                return false;
-            }
-
-            foreach (var orderItem in order.OrderItems)
-            {
-                var orderItemViewModel = orderViewModel.Items?.FirstOrDefault(oi => oi.OrderItemId == orderItem.Id);
-
-                if (orderItemViewModel == null)
+                if (order == null)
                 {
-                    _logger.LogError($"OrderItem with id {orderItem.Id} not found");
+                    _logger.LogError($"Order with id {orderViewModel.OrderId} not found");
                     return false;
                 }
 
-                orderItem.Quantity = orderItemViewModel.Quantity;
-                orderItem.Price = orderItemViewModel.Price;
-            }
+                order.OrderDate = orderViewModel.OrderDate;
 
-            await _context.SaveChangesAsync();
-            return true;
+                if (order.OrderItems == null)
+                {
+                    _logger.LogError($"Order with id {orderViewModel.OrderId} has no order items");
+                    return false;
+                }
+
+                foreach (var orderItem in order.OrderItems)
+                {
+                    var orderItemViewModel = orderViewModel.Items?.FirstOrDefault(oi => oi.OrderItemId == orderItem.Id);
+
+                    if (orderItemViewModel == null)
+                    {
+                        _logger.LogError($"OrderItem with id {orderItem.Id} not found");
+                        return false;
+                    }
+
+                    orderItem.Quantity = orderItemViewModel.Quantity;
+                    orderItem.Price = orderItemViewModel.Price;
+                }
+
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to update order");
+                return false;
+            }
         }
 
+        // Get the most recent 5 orders
         public async Task<IEnumerable<Order>> GetRecentOrders()
         {
-            var orders = await _context.Orders
-                .Include(o => o.OrderItems!)
-                .ThenInclude(oi => oi.Product)
-                .OrderByDescending(o => o.OrderDate)
-                .Take(5)
-                .ToListAsync();
-
-            return orders.Select(o => new Order
+            try
             {
-                Id = o.Id,
-                OrderDate = o.OrderDate,
-                OrderItems = o.OrderItems?.Select(oi => new OrderItem
+                var orders = await _context.Orders
+                    .Include(o => o.OrderItems!)
+                    .ThenInclude(oi => oi.Product)
+                    .OrderByDescending(o => o.OrderDate)
+                    .Take(5)
+                    .ToListAsync();
+
+                return orders.Select(o => new Order
                 {
-                    Id = oi.Id,
-                    ProductId = oi.ProductId,
-                    OrderId = oi.OrderId,
-                    Product = oi.Product,
-                    Quantity = oi.Quantity,
-                    Price = oi.Price
-                }).ToList()
-            });
+                    Id = o.Id,
+                    OrderDate = o.OrderDate,
+                    OrderItems = o.OrderItems?.Select(oi => new OrderItem
+                    {
+                        Id = oi.Id,
+                        ProductId = oi.ProductId,
+                        OrderId = oi.OrderId,
+                        Product = oi.Product,
+                        Quantity = oi.Quantity,
+                        Price = oi.Price
+                    }).ToList()
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get recent orders");
+                return new List<Order>();
+            }
         }
 
+        // Get the total number of orders
         public Task<int> GetOrderCount()
         {
-            return _context.Orders.CountAsync();
+            try
+            {
+                return _context.Orders.CountAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get order count");
+                return Task.FromResult(0);
+            }
         }
 
+        // Get the number of orders placed today
         public Task<int> GetTodaySalesCount()
         {
-            return _context.Orders
-                .Where(o => o.OrderDate.Date == DateTime.Today)
-                .CountAsync();
+            try
+            {
+                return _context.Orders
+                    .Where(o => o.OrderDate.Date == DateTime.Today)
+                    .CountAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get today's sales count");
+                return Task.FromResult(0);
+            }
         }
 
+        // Get the total sales value for today
         public Task<decimal> GetTodaySalesValue()
         {
-            return _context.Orders
-                .Where(o => o.OrderDate.Date == DateTime.Today)
-                .SumAsync(o => o.TotalPrice);
+            try
+            {
+                return _context.Orders
+                    .Where(o => o.OrderDate.Date == DateTime.Today)
+                    .SumAsync(o => o.TotalPrice);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get today's sales value");
+                return Task.FromResult(0m);
+            }
         }
 
+        // Get the top 5 selling products
         public async Task<IEnumerable<Product>> GetTopSellingProducts()
         {
-            var products = await _context.OrderItems
-            .GroupBy(oi => oi.ProductId)
-            .Select(g => new
+            try
             {
-                ProductId = g.Key,
-                Quantity = g.Sum(oi => oi.Quantity)
-            })
-            .OrderByDescending(g => g.Quantity)
-            .Take(5)
-            .ToListAsync();
+                var products = await _context.OrderItems
+                    .GroupBy(oi => oi.ProductId)
+                    .Select(g => new
+                    {
+                        ProductId = g.Key,
+                        Quantity = g.Sum(oi => oi.Quantity)
+                    })
+                    .OrderByDescending(g => g.Quantity)
+                    .Take(5)
+                    .ToListAsync();
 
-            return products.Select(p => new Product
+                return products.Select(p => new Product
+                {
+                    ProductId = p.ProductId,
+                    Name = _context.Product.Find(p.ProductId)?.Name,
+                    Quantity = p.Quantity
+                });
+            }
+            catch (Exception ex)
             {
-            ProductId = p.ProductId,
-            Name = _context.Product.Find(p.ProductId)?.Name,
-            Quantity = p.Quantity
-            });
+                _logger.LogError(ex, "Failed to get top selling products");
+                return new List<Product>();
+            }
         }
 
+        // Get the top 5 selling products with total quantity
         public async Task<IEnumerable<Product>> GetTopSellingProductsWithTotalQuantity()
         {
-            var products = await _context.OrderItems
-            .GroupBy(oi => oi.ProductId)
-            .Select(g => new
+            try
             {
-                ProductId = g.Key,
-                Quantity = g.Sum(oi => oi.Quantity)
-            })
-            .OrderByDescending(g => g.Quantity)
-            .Take(5)
-            .ToListAsync();
+                var products = await _context.OrderItems
+                    .GroupBy(oi => oi.ProductId)
+                    .Select(g => new
+                    {
+                        ProductId = g.Key,
+                        Quantity = g.Sum(oi => oi.Quantity)
+                    })
+                    .OrderByDescending(g => g.Quantity)
+                    .Take(5)
+                    .ToListAsync();
 
-            return products.Select(p => new Product
+                return products.Select(p => new Product
+                {
+                    ProductId = p.ProductId,
+                    Name = _context.Product.Find(p.ProductId)?.Name,
+                    Quantity = p.Quantity
+                });
+            }
+            catch (Exception ex)
             {
-            ProductId = p.ProductId,
-            Name = _context.Product.Find(p.ProductId)?.Name,
-            Quantity = p.Quantity
-            });
+                _logger.LogError(ex, "Failed to get top selling products with total quantity");
+                return new List<Product>();
+            }
         }
-        
 
+        // Get the bottom 5 selling products
         public async Task<IEnumerable<Product>> GetLowSellingProducts()
         {
-            var products = await _context.OrderItems
-                .GroupBy(oi => oi.ProductId)
-                .Select(g => new
-                {
-                    ProductId = g.Key,
-                    Quantity = g.Sum(oi => oi.Quantity)
-                })
-                .OrderBy(g => g.Quantity)
-                .Take(5)
-                .ToListAsync();
-
-            return products.Select(p => new Product
+            try
             {
-                ProductId = p.ProductId,
-                Name = _context.Product.Find(p.ProductId)?.Name,
-                Quantity = p.Quantity
-            });
+                var products = await _context.OrderItems
+                    .GroupBy(oi => oi.ProductId)
+                    .Select(g => new
+                    {
+                        ProductId = g.Key,
+                        Quantity = g.Sum(oi => oi.Quantity)
+                    })
+                    .OrderBy(g => g.Quantity)
+                    .Take(5)
+                    .ToListAsync();
+
+                return products.Select(p => new Product
+                {
+                    ProductId = p.ProductId,
+                    Name = _context.Product.Find(p.ProductId)?.Name,
+                    Quantity = p.Quantity
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get low selling products");
+                return new List<Product>();
+            }
         }
 
+        // Get the total sales value for the past week
         public async Task<decimal> GetWeekSalesValue()
         {
-            return await _context.Orders
-                .Where(o => o.OrderDate.Date >= DateTime.Today.AddDays(-7))
-                .SumAsync(o => o.TotalPrice);
+            try
+            {
+                return await _context.Orders
+                    .Where(o => o.OrderDate.Date >= DateTime.Today.AddDays(-7))
+                    .SumAsync(o => o.TotalPrice);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get week sales value");
+                return 0m;
+            }
         }
 
+        // Get the total sales value for the past month
         public async Task<decimal> GetMonthSalesValue()
         {
-            return await _context.Orders
-                .Where(o => o.OrderDate.Date >= DateTime.Today.AddMonths(-1))
-                .SumAsync(o => o.TotalPrice);
-        }
-
-       
-
-        public async Task<List<SalesTrendDto>> GetSalesTrend()
-    {
-        try
-        {
-            var trends = await _context.Orders
-                .GroupBy(o => o.OrderDate.Date)
-                .OrderBy(g => g.Key)
-                .Select(g => new SalesTrendDto
-                {
-                    Date = g.Key.ToString("yyyy-MM-dd"),
-                    TotalSales = g.Sum(o => o.TotalPrice)
-                })
-                .ToListAsync();
-
-            if (!trends.Any())
+            try
             {
-                _logger.LogInformation("No sales trend data found in Orders table");
+                return await _context.Orders
+                    .Where(o => o.OrderDate.Date >= DateTime.Today.AddMonths(-1))
+                    .SumAsync(o => o.TotalPrice);
             }
-            return trends;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get month sales value");
+                return 0m;
+            }
         }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Failed to retrieve sales trend data");
-            return new List<SalesTrendDto>();
-        }
-    }
 
+        // Get the sales trend data
+        public async Task<List<SalesTrendDto>> GetSalesTrend()
+        {
+            try
+            {
+                var trends = await _context.Orders
+                    .GroupBy(o => o.OrderDate.Date)
+                    .OrderBy(g => g.Key)
+                    .Select(g => new SalesTrendDto
+                    {
+                        Date = g.Key.ToString("yyyy-MM-dd"),
+                        TotalSales = g.Sum(o => o.TotalPrice)
+                    })
+                    .ToListAsync();
+
+                if (!trends.Any())
+                {
+                    _logger.LogInformation("No sales trend data found in Orders table");
+                }
+                return trends;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to retrieve sales trend data");
+                return new List<SalesTrendDto>();
+            }
+        }
+
+        // Get the monthly sales list
         public async Task<List<decimal>> GetMonthlySalesList()
         {
-            try{
-            return await _context.Orders
-                .GroupBy(o => o.OrderDate.Month)
-                .Select(g => g.Sum(o => o.TotalPrice))
-                .ToListAsync();
+            try
+            {
+                return await _context.Orders
+                    .GroupBy(o => o.OrderDate.Month)
+                    .Select(g => g.Sum(o => o.TotalPrice))
+                    .ToListAsync();
             }
             catch (Exception ex)
             {
@@ -320,18 +470,20 @@ namespace inventory.Services.OrderRepo
             }
         }
 
+        // Get the weekly sales list
         public async Task<List<decimal>> GetWeeklySalesList()
         {
-            try{
-            var orders = await _context.Orders
-                .Select(o => new { o.OrderDate, o.TotalPrice })
-                .ToListAsync(); // Fetch data into memory
+            try
+            {
+                var orders = await _context.Orders
+                    .Select(o => new { o.OrderDate, o.TotalPrice })
+                    .ToListAsync(); // Fetch data into memory
 
-            return orders
-                .GroupBy(o => o.OrderDate.DayOfWeek)
-                .OrderBy(g => g.Key) // Optional: Sort by DayOfWeek enum (Sunday to Saturday)
-                .Select(g => g.Sum(o => o.TotalPrice))
-                .ToList();
+                return orders
+                    .GroupBy(o => o.OrderDate.DayOfWeek)
+                    .OrderBy(g => g.Key) // Optional: Sort by DayOfWeek enum (Sunday to Saturday)
+                    .Select(g => g.Sum(o => o.TotalPrice))
+                    .ToList();
             }
             catch (Exception ex)
             {
@@ -340,13 +492,15 @@ namespace inventory.Services.OrderRepo
             }
         }
 
+        // Get the daily sales list
         public async Task<List<decimal>> GetDailySalesList()
         {
-            try{
-            return await _context.Orders
-                .GroupBy(o => o.OrderDate.Date)
-                .Select(g => g.Sum(o => o.TotalPrice))
-                .ToListAsync();
+            try
+            {
+                return await _context.Orders
+                    .GroupBy(o => o.OrderDate.Date)
+                    .Select(g => g.Sum(o => o.TotalPrice))
+                    .ToListAsync();
             }
             catch (Exception ex)
             {
@@ -355,40 +509,41 @@ namespace inventory.Services.OrderRepo
             }
         }
 
+        // Get the sales data by category
         public async Task<List<CategorySalesDto>> GetCategorySales()
-{
-    try
-    {
-        var categorySales = await _context.Orders
-            .Join(_context.OrderItems, o => o.Id, oi => oi.OrderId, (o, oi) => new { o, oi })
-            .Join(_context.Product, oi => oi.oi.ProductId, p => p.ProductId, (oi, p) => new { oi.o.TotalPrice, p.CategoryId })
-            .GroupBy(x => (int?)(x.CategoryId) ?? 0) // 0 for null categories
-            .Select(g => new
-            {
-                CategoryId = g.Key,
-                Sales = g.Sum(x => x.TotalPrice)
-            })
-            .Join(_context.Categories, 
-                  cs => cs.CategoryId, 
-                  c => c.CategoryId, 
-                  (cs, c) => new CategorySalesDto
-                  {
-                      Category = c != null ? c.Name : "Unknown",
-                      Sales = cs.Sales
-                  })
-            .ToListAsync();
-
-        if (!categorySales.Any())
         {
-            _logger.LogInformation("No category sales data found");
+            try
+            {
+                var categorySales = await _context.Orders
+                    .Join(_context.OrderItems, o => o.Id, oi => oi.OrderId, (o, oi) => new { o, oi })
+                    .Join(_context.Product, oi => oi.oi.ProductId, p => p.ProductId, (oi, p) => new { oi.o.TotalPrice, p.CategoryId })
+                    .GroupBy(x => (int?)(x.CategoryId) ?? 0) // 0 for null categories
+                    .Select(g => new
+                    {
+                        CategoryId = g.Key,
+                        Sales = g.Sum(x => x.TotalPrice)
+                    })
+                    .Join(_context.Categories,
+                          cs => cs.CategoryId,
+                          c => c.CategoryId,
+                          (cs, c) => new CategorySalesDto
+                          {
+                              Category = c != null ? c.Name : "Unknown",
+                              Sales = cs.Sales
+                          })
+                    .ToListAsync();
+
+                if (!categorySales.Any())
+                {
+                    _logger.LogInformation("No category sales data found");
+                }
+                return categorySales;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to retrieve category sales data");
+                return new List<CategorySalesDto>();
+            }
         }
-        return categorySales;
-    }
-    catch (Exception ex)
-    {
-        _logger.LogError(ex, "Failed to retrieve category sales data");
-        return new List<CategorySalesDto>();
-    }
-}
     }
 }

@@ -1,39 +1,91 @@
 using inventory.Data;
 using inventory.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace inventory.Services.CategoryRepo;
-    public class CategoryService:ICategoryService{
+namespace inventory.Services.CategoryRepo
+{
+    public class CategoryService : ICategoryService
+    {
         private readonly ProductContext _context;
-        public CategoryService(ProductContext context){
 
+        public CategoryService(ProductContext context)
+        {
             _context = context;
         }
-        public async Task<IEnumerable<Category>> GetCategories(){
+
+        // Get all categories
+        public async Task<IEnumerable<Category>> GetCategories()
+        {
             return await _context.Categories.ToListAsync();
         }
-        public async Task<Category?> GetCategoryByIdAsync(int? id){
+
+        // Get category by ID
+        public async Task<Category?> GetCategoryByIdAsync(int? id)
+        {
             return await _context.Categories.FindAsync(id);
         }
-        public async Task SaveChangesAsync(){
+
+        // Save changes to the database
+        public async Task SaveChangesAsync()
+        {
             await _context.SaveChangesAsync();
         }
-        public async Task<bool> UpdateCategory(Category category){
-            _context.Entry(category).State = EntityState.Modified;
-            await SaveChangesAsync();
-            return true;
+
+        // Update an existing category
+        public async Task<bool> UpdateCategory(Category category)
+        {
+            try
+            {
+                _context.Entry(category).State = EntityState.Modified;
+                await SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                // Log exception or handle it as needed
+                return false;
+            }
         }
-        public async Task<bool> AddCategory(Category category){
-            _context.Categories.Add(category);
-            await SaveChangesAsync();
-            return true;
+
+        // Add a new category
+        public async Task<bool> AddCategory(Category category)
+        {
+            try
+            {
+                _context.Categories.Add(category);
+                await SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                // Log exception or handle it as needed
+                return false;
+            }
         }
-        public async Task<bool> RemoveCategory(Category category){
-            _context.Categories.Remove(category);
-            await SaveChangesAsync();
-            return true;
+
+        // Remove an existing category
+        public async Task<bool> RemoveCategory(Category category)
+        {
+            try
+            {
+                _context.Categories.Remove(category);
+                await SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                // Log exception or handle it as needed
+                return false;
+            }
         }
-        public bool CategoryExists(int id){
+
+        // Check if a category exists by ID
+        public bool CategoryExists(int id)
+        {
             return _context.Categories.Any(e => e.CategoryId == id);
         }
     }
+}

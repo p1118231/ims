@@ -17,7 +17,8 @@ namespace inventory.Support
 
             return services;
         }
-
+        // SameSiteMode.None should not be used with non-secure cookies
+        // For more information, visit https://www.chromium.org/updates/same-site/incompatible-clients
         private static void CheckSameSite(CookieOptions options)
         {
             if (options.SameSite == SameSiteMode.None && options.Secure == false)

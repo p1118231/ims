@@ -14,7 +14,7 @@ namespace inventory.Services.StockOptimisationRepo
         client.Timeout = TimeSpan.FromSeconds(10);
         client.DefaultRequestHeaders.Add("Accept", "application/json");
     }
-
+    // Method to predict stock level asynchronously for a given productId
     public async Task<StockOptimisationResponse> PredictStockLevelAsync(int productId)
     {
         try {

@@ -4,40 +4,48 @@ using inventory.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
-namespace inventory.Controllers;
-
-public class AccountController : Controller
+namespace inventory.Controllers
 {
-    private readonly ILogger<AccountController> _logger;
-
-    public AccountController(ILogger<AccountController> logger)
+    public class AccountController : Controller
     {
-        _logger = logger;
-    }
+        private readonly ILogger<AccountController> _logger;
 
-   public IActionResult Login(string returnUrl = "/")
-    {
-        var authenticationProperties = new AuthenticationProperties { RedirectUri = returnUrl };
-        return Challenge(authenticationProperties, "Auth0");
-    }
-
-    public async Task<IActionResult> Logout()
-    {
-        // Sign out from the cookie authentication scheme
-        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-        // Sign out from Auth0 (if using OpenID Connect)
-        await HttpContext.SignOutAsync("Auth0", new AuthenticationProperties
+        // Constructor to initialize the logger
+        public AccountController(ILogger<AccountController> logger)
         {
-            RedirectUri = Url.Action("SignIn", "Account", null, Request.Scheme) // Ensure full URL
-        });
+            _logger = logger;
+        }
 
-        // Explicitly redirect to SignIn after sign-out
-        return RedirectToAction("SignIn", "Account");
-    }
+        // Action method to handle login
+        public IActionResult Login(string returnUrl = "/")
+        {
+            // Set the redirect URI after successful authentication
+            var authenticationProperties = new AuthenticationProperties { RedirectUri = returnUrl };
+            // Challenge the Auth0 authentication scheme
+            return Challenge(authenticationProperties, "Auth0");
+        }
 
-    public IActionResult SignIn()
-    {
-        return View();
+        // Action method to handle logout
+        public async Task<IActionResult> Logout()
+        {
+            // Sign out from the cookie authentication scheme
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            // Sign out from Auth0 (if using OpenID Connect)
+            await HttpContext.SignOutAsync("Auth0", new AuthenticationProperties
+            {
+                // Redirect to SignIn action after sign-out
+                RedirectUri = Url.Action("SignIn", "Account", null, Request.Scheme) // Ensure full URL
+            });
+
+            // Explicitly redirect to SignIn after sign-out
+            return RedirectToAction("SignIn", "Account");
+        }
+
+        // Action method to display the sign-in view
+        public IActionResult SignIn()
+        {
+            return View();
+        }
     }
 }

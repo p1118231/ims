@@ -20,7 +20,7 @@ public class ForecastService: IForecastService
         _logger = logger;
         
     }
-
+    // Method to get today's sales forecast asynchronously
     public async Task<SalesForecastResponse> GetTodaysSalesForecastAsync()
     {
         try{
