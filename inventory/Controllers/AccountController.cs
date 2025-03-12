@@ -26,20 +26,24 @@ namespace inventory.Controllers
         }
 
         // Action method to handle logout
-        public async Task<IActionResult> Logout()
+       public async Task<IActionResult> Logout()
         {
-            // Sign out from the cookie authentication scheme
+            // Sign out from cookie authentication
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-            // Sign out from Auth0 (if using OpenID Connect)
+            // Sign out from Auth0 with a proper redirect to end session
+            var callbackUrl = Url.Action("SignIn", "Account", null, Request.Scheme);
             await HttpContext.SignOutAsync("Auth0", new AuthenticationProperties
             {
-                // Redirect to SignIn action after sign-out
-                RedirectUri = Url.Action("SignIn", "Account", null, Request.Scheme) // Ensure full URL
+                RedirectUri = callbackUrl + "?clearCache=true" // Force cache clear
             });
 
-            // Explicitly redirect to SignIn after sign-out
-            return RedirectToAction("SignIn", "Account");
+            // Clear any local session or cache
+            HttpContext.Session.Clear(); // Ensure session is cleared if used
+            Response.Cookies.Delete(".AspNetCore.Cookies"); // Explicitly delete cookie
+
+            // Redirect to login page
+            return Redirect(callbackUrl ?? "/");
         }
 
         // Action method to display the sign-in view

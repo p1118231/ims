@@ -35,15 +35,7 @@
             <div class="signin-form-container">
                 <h2 class="signin-form-title">Sign In</h2>
                 <p class="signin-form-subtitle">Access your inventory dashboard</p>
-                <form asp-action="Login" method="post" class="signin-form">
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required />
-                    </div>
-                    <div class="mb-4">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required />
-                    </div>
+                <form asp-controller="Account" asp-action="Login" method="post" class="signin-form">
                     <button type="submit" class="btn btn-signin w-100">Sign In <i class="bi bi-arrow-right ms-2"></i></button>
                 </form>
                 <p class="signin-help mt-3">Need help? <a href="/help" class="footer-link">Contact Support</a></p>

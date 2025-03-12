@@ -48,9 +48,9 @@ public class ReportService : IReportService
             TodaySalesCount = orders.Where(o => o.OrderDate.Date == DateTime.Today.Date).Count(),
             WeekSalesCount = orders.Where(o => o.OrderDate.Date >= DateTime.Today.Date.AddDays(-7)).Count(),
             MonthSalesCount = orders.Where(o => o.OrderDate.Date >= DateTime.Today.Date.AddMonths(-1)).Count(),
-            TodaySalesValue = orders.Where(o => o.OrderDate.Date == DateTime.Today.Date).Sum(o => o.TotalPrice),
-            WeekSalesValue = orders.Where(o => o.OrderDate.Date >= DateTime.Today.Date.AddDays(-7)).Sum(o => o.TotalPrice),
-            MonthSalesValue = orders.Where(o => o.OrderDate.Date >= DateTime.Today.Date.AddMonths(-1)).Sum(o => o.TotalPrice),
+            //TodaySalesValue = orders.Where(o => o.OrderDate.Date == DateTime.Today.Date).Sum(o => o.TotalPrice),
+            //WeekSalesValue = orders.Where(o => o.OrderDate.Date >= DateTime.Today.Date.AddDays(-7)).Sum(o => o.TotalPrice),
+           // MonthSalesValue = orders.Where(o => o.OrderDate.Date >= DateTime.Today.Date.AddMonths(-1)).Sum(o => o.TotalPrice),
             LowStockProducts = (await _productService.GetLowStockProducts()).ToList(),
             TopSellingProducts = (await _orderService.GetTopSellingProducts()).ToList(),
             LowSellingProducts = (await _orderService.GetLowSellingProducts()).ToList(),
@@ -60,6 +60,10 @@ public class ReportService : IReportService
 
 
         };
+        reportDto.TodaySalesValue = await _orderService.GetTodaySalesValue();
+        reportDto.WeekSalesValue = await _orderService.GetWeekSalesValue();
+        reportDto.MonthSalesValue = await _orderService.GetMonthSalesValue();
+        
         return reportDto;
     
 
