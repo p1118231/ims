@@ -7,7 +7,9 @@ using inventory.Models;
 using inventory.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
-using inventory.Services.NotificationRepo; // Ensure the correct namespace for ProductDto
+using inventory.Services.NotificationRepo;
+using inventory.Services.PriceOptimisation;
+using inventory.Services.StockOptimisationRepo; // Ensure the correct namespace for ProductDto
 
 namespace inventory.Services.ProductRepo
 {
@@ -18,11 +20,14 @@ namespace inventory.Services.ProductRepo
 
         private readonly ILogger<ProductService> _logger;
 
-        public ProductService(ProductContext context, INotificationService notificationService, ILogger<ProductService> logger)
+        private readonly IStockOptimisationService _stockOptimisationService;
+
+        public ProductService(ProductContext context, INotificationService notificationService, ILogger<ProductService> logger, IStockOptimisationService stockOptimisationService)
         {
             _context = context;
             _notificationService = notificationService;
             _logger = logger;
+            _stockOptimisationService = stockOptimisationService;
         }
 
         // Add a new product to the database
@@ -167,6 +172,8 @@ namespace inventory.Services.ProductRepo
             }
         }
 
+        
+
         // Get products that are low in stock
         public async Task<IEnumerable<Product>> GetLowStockProducts()
         {
@@ -196,5 +203,41 @@ namespace inventory.Services.ProductRepo
                 return 0;
             }
         }
+
+        // Check and notify if a product is less than the predicted quantity
+        public async Task CheckAndNotififyIfProductIsLessThanProedicted()
+        {
+            try
+            {
+                Console.WriteLine("Checking and notifying if product is less than predicted quantity");
+                var products = await _context.Product.ToListAsync();
+                foreach (var product in products)
+                {
+                    var predictedQuantity = await _stockOptimisationService.PredictStockLevelAsync(product.ProductId);
+                    if (product.Quantity < predictedQuantity.predicted_stock_level)
+                    {
+                        var notification = new Notification()
+                        {
+                            Message = $"Product {product.Name} is less than the estimated quantity",
+                            Date = System.DateTime.Now
+                        };
+                        await _notificationService.CreateNotificationAsync(notification);
+                    }
+                    else if (product.Quantity > predictedQuantity.predicted_stock_level)
+                    {
+                        var notification = new Notification()
+                        {
+                            Message = $"Product {product.Name} is more than the estimated quantity",
+                            Date = System.DateTime.Now
+                        };
+                        await _notificationService.CreateNotificationAsync(notification);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log exception
+                _logger.LogError(ex, "Error checking and notifying if product is less than predicted quantity");
+            }
     }
-}
+}}

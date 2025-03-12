@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using inventory.Services.StockOptimisationRepo;
 
 namespace inventoryTest.Services;
 
@@ -18,6 +19,8 @@ public class ProductServiceTest
 {
     private readonly ProductContext _context;
     private readonly Mock<INotificationService> _notificationServiceMock;
+
+    private readonly Mock<IStockOptimisationService> _stockOptimisationServiceMock;
     private readonly Mock<ILogger<ProductService>> _loggerMock;
     private readonly ProductService _service;
 
@@ -30,9 +33,10 @@ public class ProductServiceTest
         _context = new ProductContext(options);
 
         _notificationServiceMock = new Mock<INotificationService>();
+        _stockOptimisationServiceMock = new Mock<IStockOptimisationService>();
         _loggerMock = new Mock<ILogger<ProductService>>();
 
-        _service = new ProductService(_context, _notificationServiceMock.Object, _loggerMock.Object);
+        _service = new ProductService(_context, _notificationServiceMock.Object, _loggerMock.Object, _stockOptimisationServiceMock.Object);
 
         // Seed initial data
         SeedData();

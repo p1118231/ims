@@ -23,6 +23,8 @@ public interface IProductService{
 
     Task CheckAndRestockProduct();
 
+    Task CheckAndNotififyIfProductIsLessThanProedicted();
+
     bool ProductExists(int id);
     
 

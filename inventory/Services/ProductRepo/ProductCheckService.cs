@@ -20,6 +20,7 @@ namespace inventory.Services.ProductRepo
                 {
                     var productService = scope.ServiceProvider.GetRequiredService<IProductService>();
                     await productService.CheckAndRestockProduct();
+                    await productService.CheckAndNotififyIfProductIsLessThanProedicted();
                 }
                 await Task.Delay(TimeSpan.FromMinutes(10), stoppingToken); // Check every 10 minutes
             }
